@@ -48,10 +48,17 @@ class FreshMusicApp extends StatelessWidget {
                 brightness: Brightness.dark,
               );
 
-          return _buildApp(
-            appController: appController,
-            lightScheme: lightScheme,
-            darkScheme: darkScheme,
+          // DynamicColorBuilder 的 builder 会在外层 Obx 之外执行。
+          // 莫奈取色开启后，如果这里直接返回 GetMaterialApp，
+          // themeMode / locale 的变化就不会被 GetX 继续追踪，导致冷启动后
+          // 切换浅色 / 深色没有反应。这里再包一层 Obx，让动态取色模式下
+          // 主题和语言仍然保持响应式。
+          return Obx(
+            () => _buildApp(
+              appController: appController,
+              lightScheme: lightScheme,
+              darkScheme: darkScheme,
+            ),
           );
         },
       );
