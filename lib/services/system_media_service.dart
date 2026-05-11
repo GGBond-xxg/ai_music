@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 
 import '../models/music_track.dart';
 import 'cover_uri_resolver.dart';
-import 'player/media_kit_player.dart';
 import 'player_controller.dart';
 
 /// 把现有播放器状态同步给系统媒体中心。
