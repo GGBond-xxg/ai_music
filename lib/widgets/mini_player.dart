@@ -44,10 +44,10 @@ class _MiniPlayerState extends State<MiniPlayer> {
 
     CoverPaletteCache.instance
         .resolveSeedForTrack(
-          track,
-          brightness,
-          fallback: fallbackColor,
-        )
+      track,
+      brightness,
+      fallback: fallbackColor,
+    )
         .then((seed) {
       if (!mounted) return;
       final latest = controller.currentTrack;
@@ -84,124 +84,135 @@ class _MiniPlayerState extends State<MiniPlayer> {
       if (track == null) return const SizedBox.shrink();
 
       _ensureCoverSeed(context, controller, scheme);
-      final progressColor = _progressColor(context, scheme);
-      final progressOnColor = ThemeData.estimateBrightnessForColor(progressColor) ==
-              Brightness.dark
-          ? Colors.white
-          : Colors.black;
+      final targetProgressColor = _progressColor(context, scheme);
 
-      return SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-          child: Material(
-            color: scheme.surfaceContainerHigh,
-            elevation: 0,
-            borderRadius: BorderRadius.circular(24),
-            clipBehavior: Clip.antiAlias,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: openPlayer,
-              onVerticalDragStart: (details) {
-                _lastDragY = details.globalPosition.dy;
-                sheetController.beginInteractiveOpen(context);
-              },
-              onVerticalDragUpdate: (details) {
-                _lastDragY = details.globalPosition.dy;
-                sheetController.updateDrag(details.primaryDelta ?? 0);
-              },
-              onVerticalDragEnd: (details) {
-                sheetController.endDrag(
-                  velocity: details.primaryVelocity ?? 0,
-                  releaseY: _lastDragY,
-                );
-                _lastDragY = null;
-              },
-              onVerticalDragCancel: () {
-                sheetController.endDrag(releaseY: _lastDragY);
-                _lastDragY = null;
-              },
-              child: SizedBox(
-                height: 74,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: _MiniPlayerProgressLayer(
-                        controller: controller,
-                        fallbackDuration: track.duration,
-                        scheme: scheme,
-                        progressColor: progressColor,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
-                      child: Row(
-                        children: [
-                          TrackCover(
-                            track: track,
-                            size: 52,
-                            borderRadius: 16,
+      return TweenAnimationBuilder<Color?>(
+        tween: ColorTween(end: targetProgressColor),
+        duration: const Duration(milliseconds: 420),
+        curve: Curves.easeOutCubic,
+        builder: (context, animatedColor, _) {
+          final progressColor = animatedColor ?? targetProgressColor;
+          final progressOnColor =
+              ThemeData.estimateBrightnessForColor(progressColor) ==
+                      Brightness.dark
+                  ? Colors.white
+                  : Colors.black;
+
+          return SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+              child: Material(
+                color: scheme.surfaceContainerHigh,
+                elevation: 0,
+                borderRadius: BorderRadius.circular(24),
+                clipBehavior: Clip.antiAlias,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: openPlayer,
+                  onVerticalDragStart: (details) {
+                    _lastDragY = details.globalPosition.dy;
+                    sheetController.beginInteractiveOpen(context);
+                  },
+                  onVerticalDragUpdate: (details) {
+                    _lastDragY = details.globalPosition.dy;
+                    sheetController.updateDrag(details.primaryDelta ?? 0);
+                  },
+                  onVerticalDragEnd: (details) {
+                    sheetController.endDrag(
+                      velocity: details.primaryVelocity ?? 0,
+                      releaseY: _lastDragY,
+                    );
+                    _lastDragY = null;
+                  },
+                  onVerticalDragCancel: () {
+                    sheetController.endDrag(releaseY: _lastDragY);
+                    _lastDragY = null;
+                  },
+                  child: SizedBox(
+                    height: 74,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: _MiniPlayerProgressLayer(
+                            controller: controller,
+                            fallbackDuration: track.duration,
+                            scheme: scheme,
+                            progressColor: progressColor,
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  track.title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: scheme.onSurface,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                const SizedBox(height: 3),
-                                Text(
-                                  track.artist ?? 'home.playingNow'.tr,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: scheme.onSurfaceVariant,
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            tooltip: 'mini.openPlayer'.tr,
-                            onPressed: openPlayer,
-                            icon: const Icon(Icons.keyboard_arrow_up_rounded),
-                          ),
-                          Obx(() {
-                            final playing = controller.isPlayingNow.value;
-                            return IconButton.filled(
-                              style: IconButton.styleFrom(
-                                backgroundColor: progressColor,
-                                foregroundColor: progressOnColor,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
+                          child: Row(
+                            children: [
+                              TrackCover(
+                                track: track,
+                                size: 52,
+                                borderRadius: 16,
                               ),
-                              icon: Icon(
-                                playing
-                                    ? Icons.pause_rounded
-                                    : Icons.play_arrow_rounded,
-                                size: 28,
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      track.title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: scheme.onSurface,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      track.artist ?? 'home.playingNow'.tr,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: scheme.onSurfaceVariant,
+                                        fontSize: 12.5,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              onPressed: controller.togglePlay,
-                            );
-                          }),
-                        ],
-                      ),
+                              IconButton(
+                                tooltip: 'mini.openPlayer'.tr,
+                                onPressed: openPlayer,
+                                icon:
+                                    const Icon(Icons.keyboard_arrow_up_rounded),
+                              ),
+                              Obx(() {
+                                final playing = controller.isPlayingNow.value;
+                                return IconButton.filled(
+                                  style: IconButton.styleFrom(
+                                    backgroundColor: progressColor,
+                                    foregroundColor: progressOnColor,
+                                  ),
+                                  icon: Icon(
+                                    playing
+                                        ? Icons.pause_rounded
+                                        : Icons.play_arrow_rounded,
+                                    size: 28,
+                                  ),
+                                  onPressed: controller.togglePlay,
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       );
     });
   }
@@ -223,9 +234,8 @@ class _MiniPlayerProgressLayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final duration = controller.displayDuration.value ??
-          fallbackDuration ??
-          Duration.zero;
+      final duration =
+          controller.displayDuration.value ?? fallbackDuration ?? Duration.zero;
       final position = controller.displayPosition.value;
       final progress = _progressValue(position, duration);
 

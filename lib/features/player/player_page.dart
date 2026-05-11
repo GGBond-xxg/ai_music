@@ -796,8 +796,10 @@ class _PlayerPageState extends State<PlayerPage> {
                         child: AnimatedOpacity(
                           duration: duration,
                           opacity: opacity,
-                          child: Theme(
+                          child: AnimatedTheme(
                             data: pageTheme,
+                            duration: const Duration(milliseconds: 420),
+                            curve: Curves.easeOutCubic,
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 420),
                               curve: Curves.easeOutCubic,
@@ -2530,109 +2532,106 @@ class _SleepTimerSheetState extends State<_SleepTimerSheet> {
           ],
         ),
         child: SafeArea(
-              top: false,
-              child: SingleChildScrollView(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                padding: const EdgeInsets.fromLTRB(22, 14, 22, 22),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          top: false,
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.fromLTRB(22, 14, 22, 22),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 44,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: scheme.onSurfaceVariant.withValues(alpha: 0.28),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  'player.sleepTimer'.tr,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: scheme.onSurface,
+                        fontWeight: FontWeight.w900,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Obx(() {
+                  final remaining = widget.controller.sleepTimerRemaining.value;
+                  return Text(
+                    remaining == null
+                        ? 'player.sleepTimerDesc'.tr
+                        : 'player.currentRemaining'.trParams(
+                            {'label': widget.controller.sleepTimerLabel}),
+                    style: TextStyle(
+                      color: scheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  );
+                }),
+                const SizedBox(height: 18),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
                   children: [
-                    Center(
-                      child: Container(
-                        width: 44,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color:
-                              scheme.onSurfaceVariant.withValues(alpha: 0.28),
-                          borderRadius: BorderRadius.circular(999),
+                    for (final minutes in presets)
+                      FilledButton.tonal(
+                        onPressed: () => _startTimer(minutes),
+                        child: Text(
+                            'player.minutes'.trParams({'minutes': '$minutes'})),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 18),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _minutesController,
+                        focusNode: _focusNode,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) => _startCustomTimer(),
+                        decoration: InputDecoration(
+                          labelText: 'player.customMinutes'.tr,
+                          hintText: 'player.customMinutesHint'.tr,
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 18),
-                    Text(
-                      'player.sleepTimer'.tr,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: scheme.onSurface,
-                            fontWeight: FontWeight.w900,
-                          ),
+                    const SizedBox(width: 12),
+                    FilledButton(
+                      onPressed: _startCustomTimer,
+                      child: Text('player.start'.tr),
                     ),
-                    const SizedBox(height: 8),
-                    Obx(() {
-                      final remaining =
-                          widget.controller.sleepTimerRemaining.value;
-                      return Text(
-                        remaining == null
-                            ? 'player.sleepTimerDesc'.tr
-                            : 'player.currentRemaining'.trParams(
-                                {'label': widget.controller.sleepTimerLabel}),
-                        style: TextStyle(
-                          color: scheme.onSurfaceVariant,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      );
-                    }),
-                    const SizedBox(height: 18),
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: [
-                        for (final minutes in presets)
-                          FilledButton.tonal(
-                            onPressed: () => _startTimer(minutes),
-                            child: Text('player.minutes'
-                                .trParams({'minutes': '$minutes'})),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 18),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _minutesController,
-                            focusNode: _focusNode,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.done,
-                            onSubmitted: (_) => _startCustomTimer(),
-                            decoration: InputDecoration(
-                              labelText: 'player.customMinutes'.tr,
-                              hintText: 'player.customMinutesHint'.tr,
-                              border: const OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        FilledButton(
-                          onPressed: _startCustomTimer,
-                          child: Text('player.start'.tr),
-                        ),
-                      ],
-                    ),
-                    Obx(() {
-                      if (widget.controller.sleepTimerRemaining.value == null) {
-                        return const SizedBox.shrink();
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: TextButton(
-                            onPressed: () {
-                              widget.controller.cancelSleepTimer();
-                              Navigator.of(context).maybePop();
-                            },
-                            child: Text('player.cancelCurrentTimer'.tr),
-                          ),
-                        ),
-                      );
-                    }),
                   ],
                 ),
-              ),
+                Obx(() {
+                  if (widget.controller.sleepTimerRemaining.value == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: () {
+                          widget.controller.cancelSleepTimer();
+                          Navigator.of(context).maybePop();
+                        },
+                        child: Text('player.cancelCurrentTimer'.tr),
+                      ),
+                    ),
+                  );
+                }),
+              ],
             ),
           ),
-      );
+        ),
+      ),
+    );
   }
 }
