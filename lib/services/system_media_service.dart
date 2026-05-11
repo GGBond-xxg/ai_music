@@ -42,7 +42,7 @@ class SystemMediaService {
         androidStopForegroundOnPause: false,
       ),
     );
-    _handler = handler as FreshMusicAudioHandler;
+    _handler = handler;
     _initialized = true;
   }
 

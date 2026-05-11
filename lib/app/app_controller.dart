@@ -10,7 +10,7 @@ enum AppThemeMode { system, light, dark }
 
 enum AppLanguage { zh, en }
 
-class AppController extends GetxController {
+class AppController extends GetxController with WidgetsBindingObserver {
   static const _themeKey = 'theme_mode';
   static const _monetKey = 'use_monet_color';
   static const _languageKey = 'language_mode';
@@ -23,6 +23,36 @@ class AppController extends GetxController {
   // 默认关闭系统动态取色，避免冷启动阶段读取系统 Core palette 抢首帧。
   // 用户仍可在设置里手动开启。
   final useMonetColor = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Android 锁屏 / 解锁后，如果系统亮暗模式在后台发生过变化，
+    // ThemeMode.system 需要主动刷新一次，避免回到前台后仍停留在旧外观。
+    if (state == AppLifecycleState.resumed &&
+        themeMode.value == AppThemeMode.system) {
+      themeMode.refresh();
+    }
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    // 跟随系统模式时，收到系统明暗变化通知就刷新根主题。
+    if (themeMode.value == AppThemeMode.system) {
+      themeMode.refresh();
+    }
+  }
 
   AppLanguage _systemLanguage() {
     final locale = PlatformDispatcher.instance.locale;
@@ -106,7 +136,12 @@ class AppController extends GetxController {
   }
 
   Future<void> setThemeMode(AppThemeMode value) async {
-    themeMode.value = value;
+    if (themeMode.value == value) {
+      // 从锁屏恢复后，重新点一次相同选项也强制刷新，避免界面还停在旧外观。
+      themeMode.refresh();
+    } else {
+      themeMode.value = value;
+    }
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_themeKey, value.name);
   }

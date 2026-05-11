@@ -543,7 +543,8 @@ class PlayerController extends GetxController with WidgetsBindingObserver {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final duration = player.duration ?? displayDuration.value ?? track.duration;
+      final duration =
+          player.duration ?? displayDuration.value ?? track.duration;
       var position = player.position;
       final displayedPosition = displayPosition.value;
       if (position == Duration.zero && displayedPosition > Duration.zero) {
@@ -898,19 +899,14 @@ class PlayerController extends GetxController with WidgetsBindingObserver {
 
   Future<void> previous() async {
     DebugTrace.instance.log('PREV',
-        'start index=${currentIndex.value} queue=${queue.length} position=${player.position}');
+        'manual start index=${currentIndex.value} queue=${queue.length} position=${player.position}');
     if (queue.isEmpty) return;
 
+    // 手动点“上一首”时始终切换到队列里的上一首，和“下一首”保持一致。
+    // 之前沿用了部分播放器的通用习惯：播放超过 3 秒就先回到当前歌曲开头，
+    // 但在这个 App 里用户明确点的是上一首，这会表现成“有概率没切歌”。
     final current = currentIndex.value.clamp(0, queue.length - 1).toInt();
-
-    if (current <= 0 || player.position > const Duration(seconds: 3)) {
-      await player.seek(Duration.zero);
-      await player.play();
-      unawaited(_persistPlaybackStateNow());
-      return;
-    }
-
-    final previousIndex = current - 1;
+    final previousIndex = current <= 0 ? queue.length - 1 : current - 1;
     await playTrack(queue[previousIndex], index: previousIndex);
   }
 
