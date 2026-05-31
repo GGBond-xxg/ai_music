@@ -452,46 +452,52 @@ class _WebDavDialogState extends State<_WebDavDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      contentPadding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
       title: Text(UiTexts.of(context).connectNasWebDav),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-                controller: url,
-                enabled: !loading && !loadingCache,
-                decoration: InputDecoration(
-                    labelText: 'WebDAV URL',
-                    hintText: 'http://192.168.1.10:5244/dav')),
-            TextField(
-                controller: user,
-                enabled: !loading && !loadingCache,
-                decoration:
-                    InputDecoration(labelText: UiTexts.of(context).account)),
-            TextField(
-                controller: pass,
-                enabled: !loading && !loadingCache,
-                obscureText: true,
-                decoration:
-                    InputDecoration(labelText: UiTexts.of(context).password)),
-            TextField(
-                controller: path,
-                enabled: !loading && !loadingCache,
-                decoration: InputDecoration(
-                    labelText: UiTexts.of(context).folderPath, hintText: '/')),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              value: recursive,
-              onChanged: loading || loadingCache
-                  ? null
-                  : (v) => setState(() => recursive = v),
-              title: Text(UiTexts.of(context).recursiveScan),
-            ),
-            if (loading || loadingCache)
-              const Padding(
-                  padding: EdgeInsets.only(top: 12),
-                  child: LinearProgressIndicator()),
-          ],
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.88,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                  controller: url,
+                  enabled: !loading && !loadingCache,
+                  decoration: InputDecoration(
+                      labelText: 'WebDAV URL',
+                      hintText: 'http://192.168.1.10:5244/dav')),
+              TextField(
+                  controller: user,
+                  enabled: !loading && !loadingCache,
+                  decoration:
+                      InputDecoration(labelText: UiTexts.of(context).account)),
+              TextField(
+                  controller: pass,
+                  enabled: !loading && !loadingCache,
+                  obscureText: true,
+                  decoration:
+                      InputDecoration(labelText: UiTexts.of(context).password)),
+              TextField(
+                  controller: path,
+                  enabled: !loading && !loadingCache,
+                  decoration: InputDecoration(
+                      labelText: UiTexts.of(context).folderPath,
+                      hintText: '/')),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                value: recursive,
+                onChanged: loading || loadingCache
+                    ? null
+                    : (v) => setState(() => recursive = v),
+                title: Text(UiTexts.of(context).recursiveScan),
+              ),
+              if (loading || loadingCache)
+                const Padding(
+                    padding: EdgeInsets.only(top: 12),
+                    child: LinearProgressIndicator()),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -933,30 +939,37 @@ class _MediaServerDialogScaffold extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final maxHeight = MediaQuery.sizeOf(context).height * 0.78;
     return AlertDialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      contentPadding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
       title: Text(title),
-      content: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 440, maxHeight: maxHeight),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                description,
-                style: TextStyle(
-                    color: scheme.onSurfaceVariant,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    height: 1.35),
-              ),
-              const SizedBox(height: 12),
-              ...children.map((child) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8), child: child)),
-              if (loading)
-                const Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: LinearProgressIndicator()),
-            ],
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.88,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.88,
+              maxHeight: maxHeight),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  description,
+                  style: TextStyle(
+                      color: scheme.onSurfaceVariant,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      height: 1.35),
+                ),
+                const SizedBox(height: 12),
+                ...children.map((child) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8), child: child)),
+                if (loading)
+                  const Padding(
+                      padding: EdgeInsets.only(top: 8),
+                      child: LinearProgressIndicator()),
+              ],
+            ),
           ),
         ),
       ),

@@ -264,7 +264,7 @@ class _LibraryGridItem extends StatelessWidget {
       fallback: item['sourceLabel']?.toString() ?? item['type']?.toString(),
     );
     if (artistName.isEmpty) return source;
-    return '$source • $artistName';
+    return '$artistName • $source';
   }
 }
 

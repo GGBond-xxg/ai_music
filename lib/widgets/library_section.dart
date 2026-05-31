@@ -7,7 +7,6 @@ import '../providers/library_provider.dart';
 import '../services/ui_texts.dart';
 import '../utils/responsive.dart';
 import 'library_grid.dart';
-import 'materialui.dart' as custom_ui;
 
 class LibrarySection extends StatefulWidget {
   final Function(Function() refreshCallback)? registerRefreshCallback;
@@ -88,7 +87,8 @@ class _LibrarySectionState extends State<LibrarySection> {
   }
 
   Future<void> _refreshData() async {
-    final libraryProvider = Provider.of<LibraryProvider>(context, listen: false);
+    final libraryProvider =
+        Provider.of<LibraryProvider>(context, listen: false);
     await libraryProvider.loadData();
   }
 
@@ -124,20 +124,6 @@ class _LibrarySectionState extends State<LibrarySection> {
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  horizontalPadding,
-                  8,
-                  horizontalPadding,
-                  12,
-                ),
-                child: custom_ui.IconHeader(
-                  icon: Icons.library_music_rounded,
-                  text: t.myMusicLibrary,
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,7 +138,8 @@ class _LibrarySectionState extends State<LibrarySection> {
                             label: Text(t.localMusic),
                             onSelected: (bool selected) {
                               HapticFeedback.lightImpact();
-                              libraryProvider.setFilters(showPlaylists: selected);
+                              libraryProvider.setFilters(
+                                  showPlaylists: selected);
                             },
                           ),
                           FilterChip(
@@ -169,13 +156,6 @@ class _LibrarySectionState extends State<LibrarySection> {
                     ],
                     Row(
                       children: [
-                        Text(
-                          t.layoutMode,
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w800,
-                              ),
-                        ),
-                        const SizedBox(width: 12),
                         SegmentedButton<_LibraryLayoutMode>(
                           segments: [
                             ButtonSegment<_LibraryLayoutMode>(

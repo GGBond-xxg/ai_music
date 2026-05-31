@@ -219,12 +219,9 @@ class UiTexts {
       zh: '$source 失败，请检查服务器或网络。',
       zhTw: '$source 失敗，請檢查伺服器或網路。');
 
-  String get myMusicLibrary =>
-      choose(en: 'My Library', zh: '我的音乐库', zhTw: '我的音樂庫');
   String get localMusic => choose(en: 'Local music', zh: '本地音乐', zhTw: '本地音樂');
   String get nasServer =>
       choose(en: 'NAS / Server', zh: 'NAS / 服务器', zhTw: 'NAS / 伺服器');
-  String get layoutMode => choose(en: 'Layout', zh: '排列方式', zhTw: '排列方式');
   String get grid => choose(en: 'Grid', zh: '格子', zhTw: '格子');
   String get list => choose(en: 'List', zh: '列表', zhTw: '列表');
   String get libraryLoadFailed =>
