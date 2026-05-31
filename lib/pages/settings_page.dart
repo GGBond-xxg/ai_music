@@ -171,22 +171,19 @@ class SettingsPage extends StatelessWidget {
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(28),
-                  child: Material(
-                    color: colorScheme.surfaceContainerLowest,
-                    child: ListView(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-                      children: const [
-                        _AutoPlaySection(),
-                        SizedBox(height: 14),
-                        _ThemeSection(),
-                        SizedBox(height: 14),
-                        _LanguageSection(),
-                        SizedBox(height: 14),
-                        _ClearMusicSection(),
-                        SizedBox(height: 14),
-                        _AboutSection(),
-                      ],
-                    ),
+                  child: ListView(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    children: const [
+                      _AutoPlaySection(),
+                      SizedBox(height: 14),
+                      _ThemeSection(),
+                      SizedBox(height: 14),
+                      _LanguageSection(),
+                      SizedBox(height: 14),
+                      _ClearMusicSection(),
+                      SizedBox(height: 14),
+                      _AboutSection(),
+                    ],
                   ),
                 ),
               ),
@@ -649,7 +646,6 @@ class _AboutLinkTile extends StatelessWidget {
       );
     }
   }
-
 
   String? _localizedSubtitle(BuildContext context) {
     final t = UiTexts.of(context);
