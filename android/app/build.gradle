@@ -51,7 +51,7 @@ android {
         versionName = flutter.versionName
 
         // 只打包我们声明过的资源，减小 APK
-        resourceConfigurations.addAll(["en", "zh", "zh-rCN", "zh-rTW", "zh-rHK", "zh-rMO"])
+        resourceConfigurations.addAll(["en", "ja", "zh", "zh-rCN", "zh-rTW", "zh-rHK", "zh-rMO"])
     }
 
     signingConfigs {

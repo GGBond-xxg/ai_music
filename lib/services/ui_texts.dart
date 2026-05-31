@@ -22,28 +22,33 @@ class UiTexts {
   bool get isZhHant => isZh && _isTraditional;
 
   String choose(
-      {required String en, required String zh, required String zhTw}) {
+      {required String en,
+      required String zh,
+      required String zhTw,
+      String? ja}) {
+    if (_lang == 'ja') return ja ?? en;
     if (isZhHant) return zhTw;
     if (isZhHans) return zh;
     return en;
   }
 
   String get appName => appNameForLocale(locale);
-  String get play => choose(en: 'Play', zh: '播放', zhTw: '播放');
-  String get pause => choose(en: 'Pause', zh: '暂停', zhTw: '暫停');
-  String get next => choose(en: 'Next', zh: '下一首', zhTw: '下一首');
-  String get settings => choose(en: 'Settings', zh: '设置', zhTw: '設定');
-  String get close => choose(en: 'Close', zh: '关闭', zhTw: '關閉');
-  String get cancel => choose(en: 'Cancel', zh: '取消', zhTw: '取消');
-  String get ok => choose(en: 'OK', zh: '确定', zhTw: '確定');
-  String get copy => choose(en: 'Copy', zh: '复制', zhTw: '複製');
+  String get play => choose(en: 'Play', zh: '播放', zhTw: '播放', ja: '再生');
+  String get pause => choose(en: 'Pause', zh: '暂停', zhTw: '暫停', ja: '一時停止');
+  String get next => choose(en: 'Next', zh: '下一首', zhTw: '下一首', ja: '次へ');
+  String get settings => choose(en: 'Settings', zh: '设置', zhTw: '設定', ja: '設定');
+  String get close => choose(en: 'Close', zh: '关闭', zhTw: '關閉', ja: '閉じる');
+  String get cancel => choose(en: 'Cancel', zh: '取消', zhTw: '取消', ja: 'キャンセル');
+  String get ok => choose(en: 'OK', zh: '确定', zhTw: '確定', ja: 'OK');
+  String get copy => choose(en: 'Copy', zh: '复制', zhTw: '複製', ja: 'コピー');
   String copied(String title) => choose(
         en: '$title copied',
         zh: '$title 已复制',
         zhTw: '$title 已複製',
+        ja: '$title をコピーしました',
       );
 
-  String get playback => choose(en: 'Playback', zh: '播放', zhTw: '播放');
+  String get playback => choose(en: 'Playback', zh: '播放', zhTw: '播放', ja: '再生');
   String get autoPlayOnOpen => choose(
         en: 'Auto-play when opening app',
         zh: '打开 App 自动播放音乐',
@@ -60,19 +65,60 @@ class UiTexts {
         zhTw: '開啟後啟動 App 或匯入歌曲後自動播放，預設關閉',
       );
 
-  String get themeMode => choose(en: 'Theme', zh: '主题模式', zhTw: '主題模式');
+  String get themeMode => choose(en: 'Theme', zh: '主题模式', zhTw: '主題模式', ja: 'テーマ');
   String get followSystem =>
-      choose(en: 'Follow system', zh: '跟随系统', zhTw: '跟隨系統');
-  String get lightMode => choose(en: 'Light mode', zh: '浅色模式', zhTw: '淺色模式');
-  String get darkMode => choose(en: 'Dark mode', zh: '夜间模式', zhTw: '夜間模式');
+      choose(en: 'Follow system', zh: '跟随系统', zhTw: '跟隨系統', ja: 'システムに従う');
+  String get lightMode => choose(en: 'Light mode', zh: '浅色模式', zhTw: '淺色模式', ja: 'ライトモード');
+  String get darkMode => choose(en: 'Dark mode', zh: '夜间模式', zhTw: '夜間模式', ja: 'ダークモード');
 
-  String get languageSwitch => choose(en: 'Language', zh: '语言切换', zhTw: '語言切換');
+  String get languageSwitch => choose(en: 'Language', zh: '语言切换', zhTw: '語言切換', ja: '言語切替');
   String get currentAppName =>
-      choose(en: 'Current app name', zh: '当前应用名', zhTw: '目前應用名稱');
-  String get aboutUs => choose(en: 'About', zh: '关于我们', zhTw: '關於我們');
+      choose(en: 'Current app name', zh: '当前应用名', zhTw: '目前應用名稱', ja: '現在のアプリ名');
+  String get aboutUs => choose(en: 'About us', zh: '关于我们', zhTw: '關於我們', ja: '私たちについて');
   String get aboutDialogTitle =>
-      choose(en: 'About Music', zh: '关于 音乐', zhTw: '關於 音樂');
-  String get techStack => choose(en: 'Tech stack', zh: '技术栈', zhTw: '技術棧');
+      choose(en: 'About us', zh: '关于我们', zhTw: '關於我們', ja: '私たちについて');
+
+  String get aboutAppTagline => choose(
+        en: "To be honest, AI wrote most of it. It's really useful.",
+        zh: '老实说，这个应用大部分都是 AI 帮我写的，真的很好用。',
+        zhTw: '老實說，這個 App 大部分都是 AI 幫我寫的，真的很好用。',
+        ja: '正直に言うと、このアプリの大部分はAIが書いてくれました。本当に便利です。',
+      );
+  String get openSourceSection => choose(
+        en: 'Tech stack / Open Source',
+        zh: '技术栈 / 开源项目',
+        zhTw: '技術棧 / 開源專案',
+        ja: '技術スタック / オープンソース',
+      );
+  String get donateSection => choose(en: 'Donate', zh: '赞助', zhTw: '贊助', ja: '寄付');
+  String get donateDescription => choose(
+        en: 'If this project helps you, donations are welcome to support future maintenance.',
+        zh: '如果这个项目对你有帮助，欢迎赞助支持后续维护。',
+        zhTw: '如果這個專案對你有幫助，歡迎贊助支持後續維護。',
+        ja: 'このプロジェクトが役に立った場合は、今後のメンテナンス支援として寄付を歓迎します。',
+      );
+  String get copyLink => choose(en: 'Copy link', zh: '复制链接', zhTw: '複製連結', ja: 'リンクをコピー');
+  String get copyAddress => choose(en: 'Copy address', zh: '复制地址', zhTw: '複製地址', ja: 'アドレスをコピー');
+  String linkCopied(String name) => choose(
+        en: '$name link copied',
+        zh: '$name 链接已复制',
+        zhTw: '$name 連結已複製',
+        ja: '$name のリンクをコピーしました',
+      );
+  String addressCopied(String name) => choose(
+        en: '$name address copied',
+        zh: '$name 地址已复制',
+        zhTw: '$name 地址已複製',
+        ja: '$name のアドレスをコピーしました',
+      );
+  String openFailed(String name) => choose(
+        en: 'Could not open: $name',
+        zh: '无法打开：$name',
+        zhTw: '無法開啟：$name',
+        ja: '開けません：$name',
+      );
+
+  String get techStack => choose(en: 'Tech stack', zh: '技术栈', zhTw: '技術棧', ja: '技術スタック');
   String get techStackBody => choose(
         en: 'Flutter / Dart, Provider, media_kit, SQLite, SharedPreferences, WebDAV, Emby / Jellyfin / Navidrome API.',
         zh: 'Flutter / Dart、Provider、media_kit、SQLite、SharedPreferences、WebDAV、Emby/Jellyfin/Navidrome API。',
@@ -80,7 +126,7 @@ class UiTexts {
             'Flutter / Dart、Provider、media_kit、SQLite、SharedPreferences、WebDAV、Emby/Jellyfin/Navidrome API。',
       );
   String get inspiredBy =>
-      choose(en: 'Inspired by', zh: '借鉴的开源项目 / 技术方向', zhTw: '借鑑的開源專案 / 技術方向');
+      choose(en: 'Inspired by', zh: '借鉴的开源项目 / 技术方向', zhTw: '借鑑的開源專案 / 技術方向', ja: '参考にしたオープンソース / 技術方向');
   String get inspiredByBody => choose(
         en: 'The UI keeps the original Music visual frame. Local and self-hosted music source support is adapted from the ai_music direction.',
         zh: '界面保留原项目的视觉框架，音乐源能力参考 ai_music 的本地音乐和自托管服务接入方式。',
@@ -92,57 +138,59 @@ class UiTexts {
         zhTw: '如有贊助歡迎捐贈，感謝支持這個音樂 App 的持續維護。',
       );
   String get trc20Address =>
-      choose(en: 'TRC20 address', zh: 'TRC20 地址', zhTw: 'TRC20 地址');
+      choose(en: 'TRC20 address', zh: 'TRC20 地址', zhTw: 'TRC20 地址', ja: 'TRC20 アドレス');
   String get chatGpt => 'ChatGPT';
 
   String get clearMusicCache =>
-      choose(en: 'Clear music cache', zh: '清空音乐缓存', zhTw: '清空音樂快取');
+      choose(en: 'Clear music cache', zh: '清空音乐缓存', zhTw: '清空音樂快取', ja: '音楽キャッシュを削除');
   String clearSourceMusic(String source) => choose(
         en: 'Clear $source music',
         zh: '清空$source音乐',
         zhTw: '清空$source音樂',
+        ja: '$source の音楽を削除',
       );
   String get clearSourceConfirmTitle =>
-      choose(en: 'Clear this music source?', zh: '清空这个音乐源？', zhTw: '清空這個音樂源？');
+      choose(en: 'Clear this music source?', zh: '清空这个音乐源？', zhTw: '清空這個音樂源？', ja: 'この音楽ソースを削除しますか？');
   String clearSourceConfirmMessage(String source) => choose(
         en: 'Only the $source list cache inside the app will be cleared. Original local files and server music will not be deleted.',
         zh: '只会清空 App 内的 $source 列表缓存，不会删除本地文件或服务器音乐。',
         zhTw: '只會清空 App 內的 $source 清單快取，不會刪除本地檔案或伺服器音樂。',
       );
-  String get clear => choose(en: 'Clear', zh: '清空', zhTw: '清空');
+  String get clear => choose(en: 'Clear', zh: '清空', zhTw: '清空', ja: '削除');
   String clearedSource(String source) => choose(
         en: '$source music cache cleared',
         zh: '已清空$source音乐缓存',
         zhTw: '已清空$source音樂快取',
+        ja: '$source の音楽キャッシュを削除しました',
       );
 
   String get musicSources =>
-      choose(en: 'Music Sources', zh: '音乐源', zhTw: '音樂源');
+      choose(en: 'Music Sources', zh: '音乐源', zhTw: '音樂源', ja: '音楽ソース');
 
   String get currentLibrary =>
-      choose(en: 'Current library', zh: '当前音乐库', zhTw: '目前音樂庫');
+      choose(en: 'Current library', zh: '当前音乐库', zhTw: '目前音樂庫', ja: '現在の音楽ライブラリ');
   String get scanningDeviceMusic => choose(
       en: 'Scanning music on this device...',
       zh: '正在扫描设备里的音乐...',
       zhTw: '正在掃描裝置裡的音樂...');
   String get noImportedMusic =>
-      choose(en: 'No music imported yet', zh: '还没有导入音乐', zhTw: '尚未匯入音樂');
+      choose(en: 'No music imported yet', zh: '还没有导入音乐', zhTw: '尚未匯入音樂', ja: 'まだ音楽がインポートされていません');
   String importedCount(int count) => choose(
       en: '$count songs imported',
       zh: '已导入 $count 首音乐',
       zhTw: '已匯入 $count 首音樂');
   String get localMusicFile =>
-      choose(en: 'Local music files', zh: '本地音乐文件', zhTw: '本地音樂檔案');
+      choose(en: 'Local music files', zh: '本地音乐文件', zhTw: '本地音樂檔案', ja: 'ローカル音楽ファイル');
   String get localMusicFileSubtitle => choose(
         en: 'Pick mp3, flac, m4a, wav and other audio files from your phone or computer.',
         zh: '选择手机/电脑上的 mp3、flac、m4a、wav 等音频文件。',
         zhTw: '選擇手機/電腦上的 mp3、flac、m4a、wav 等音訊檔案。',
       );
   String get localMusicFolder =>
-      choose(en: 'Local music folder', zh: '本地音乐文件夹', zhTw: '本地音樂資料夾');
+      choose(en: 'Local music folder', zh: '本地音乐文件夹', zhTw: '本地音樂資料夾', ja: 'ローカル音楽フォルダ');
   String get localMusicFolderSubtitle => choose(
         en: 'Scan a folder and add the songs inside to your library.',
-        zh: '扫描一个文件夹，把里面的音乐批量加入资料库。',
+        zh: '扫描一个文件夹，把里面的音乐批量加入歌曲库。',
         zhTw: '掃描一個資料夾，把裡面的音樂批量加入音樂庫。',
       );
   String get nasWebDavSubtitle => choose(
@@ -166,13 +214,13 @@ class UiTexts {
       en: 'Failed to import local music', zh: '导入本地音乐失败', zhTw: '匯入本地音樂失敗');
   String get scanFolderFailed => choose(
       en: 'Failed to scan local folder', zh: '扫描本地文件夹失败', zhTw: '掃描本地資料夾失敗');
-  String get account => choose(en: 'Account', zh: '账号', zhTw: '帳號');
-  String get password => choose(en: 'Password', zh: '密码', zhTw: '密碼');
-  String get folderPath => choose(en: 'Folder path', zh: '目录路径', zhTw: '目錄路徑');
-  String get port => choose(en: 'Port', zh: '端口', zhTw: '連接埠');
+  String get account => choose(en: 'Account', zh: '账号', zhTw: '帳號', ja: 'アカウント');
+  String get password => choose(en: 'Password', zh: '密码', zhTw: '密碼', ja: 'パスワード');
+  String get folderPath => choose(en: 'Folder path', zh: '目录路径', zhTw: '目錄路徑', ja: 'フォルダパス');
+  String get port => choose(en: 'Port', zh: '端口', zhTw: '連接埠', ja: 'ポート');
   String get recursiveScan => choose(
       en: 'Scan subfolders recursively', zh: '递归扫描子文件夹', zhTw: '遞迴掃描子資料夾');
-  String get scanLyrics => choose(en: 'Scan lyrics', zh: '扫描歌词', zhTw: '掃描歌詞');
+  String get scanLyrics => choose(en: 'Scan lyrics', zh: '扫描歌词', zhTw: '掃描歌詞', ja: '歌詞をスキャン');
   String get scanLyricsSubtitle => choose(
       en: 'Large libraries may take longer. You can turn this off first.',
       zh: '音乐库很大时会更慢，可先关闭。',
@@ -180,16 +228,16 @@ class UiTexts {
   String get connectingAndScanning =>
       choose(en: 'Connecting and scanning...', zh: '扫描中...', zhTw: '掃描中...');
   String get connectAndScan =>
-      choose(en: 'Connect & Scan', zh: '连接并扫描', zhTw: '連接並掃描');
+      choose(en: 'Connect & Scan', zh: '连接并扫描', zhTw: '連接並掃描', ja: '接続してスキャン');
   String get serverAddress =>
-      choose(en: 'Server address', zh: '服务器地址', zhTw: '伺服器位址');
+      choose(en: 'Server address', zh: '服务器地址', zhTw: '伺服器位址', ja: 'サーバーアドレス');
   String get usernameNoApiKey => choose(
       en: 'Username (when no API Key)',
       zh: '用户名（没有 API Key 时填写）',
       zhTw: '使用者名稱（沒有 API Key 時填寫）');
-  String get username => choose(en: 'Username', zh: '用户名', zhTw: '使用者名稱');
+  String get username => choose(en: 'Username', zh: '用户名', zhTw: '使用者名稱', ja: 'ユーザー名');
   String get apiKeyOptional =>
-      choose(en: 'API Key (optional)', zh: 'API Key（可选）', zhTw: 'API Key（可選）');
+      choose(en: 'API Key (optional)', zh: 'API Key（可选）', zhTw: 'API Key（可選）', ja: 'API Key（任意）');
   String get embyDescription => choose(
       en: 'You can enter an API Key; without one, use username and password.',
       zh: '可以填 API Key；没有 API Key 时填用户名和密码。',
@@ -207,9 +255,9 @@ class UiTexts {
       zh: '连接 NAS / WebDAV',
       zhTw: '連接 NAS / WebDAV');
   String get connectEmby =>
-      choose(en: 'Connect Emby', zh: '连接 Emby', zhTw: '連接 Emby');
+      choose(en: 'Connect Emby', zh: '连接 Emby', zhTw: '連接 Emby', ja: 'Emby に接続');
   String get connectJellyfin =>
-      choose(en: 'Connect Jellyfin', zh: '连接 Jellyfin', zhTw: '連接 Jellyfin');
+      choose(en: 'Connect Jellyfin', zh: '连接 Jellyfin', zhTw: '連接 Jellyfin', ja: 'Jellyfin に接続');
   String get connectNavidrome => choose(
       en: 'Connect Navidrome / Subsonic',
       zh: '连接 Navidrome / Subsonic',
@@ -219,14 +267,14 @@ class UiTexts {
       zh: '$source 失败，请检查服务器或网络。',
       zhTw: '$source 失敗，請檢查伺服器或網路。');
 
-  String get localMusic => choose(en: 'Local music', zh: '本地音乐', zhTw: '本地音樂');
+  String get localMusic => choose(en: 'Local music', zh: '本地音乐', zhTw: '本地音樂', ja: 'ローカル音楽');
   String get nasServer =>
-      choose(en: 'NAS / Server', zh: 'NAS / 服务器', zhTw: 'NAS / 伺服器');
-  String get grid => choose(en: 'Grid', zh: '格子', zhTw: '格子');
-  String get list => choose(en: 'List', zh: '列表', zhTw: '列表');
+      choose(en: 'NAS / Server', zh: 'NAS / 服务器', zhTw: 'NAS / 伺服器', ja: 'NAS / サーバー');
+  String get grid => choose(en: 'Grid', zh: '格子', zhTw: '格子', ja: 'グリッド');
+  String get list => choose(en: 'List', zh: '列表', zhTw: '列表', ja: 'リスト');
   String get libraryLoadFailed =>
       choose(en: 'Failed to load library', zh: '音乐库加载失败', zhTw: '音樂庫載入失敗');
-  String get retry => choose(en: 'Retry', zh: '重试', zhTw: '重試');
+  String get retry => choose(en: 'Retry', zh: '重试', zhTw: '重試', ja: '再試行');
   String get noMusicYet =>
       choose(en: 'No music yet', zh: '还没有音乐', zhTw: '還沒有音樂');
   String get importFromSourcesHint => choose(
@@ -235,18 +283,18 @@ class UiTexts {
         zhTw: '到「音樂源」頁匯入本地音樂、NAS/WebDAV、Emby、Jellyfin 或 Navidrome 歌曲。',
       );
   String get noMusicFound =>
-      choose(en: 'No music found', zh: '没有找到音乐', zhTw: '找不到音樂');
+      choose(en: 'No music found', zh: '没有找到音乐', zhTw: '找不到音樂', ja: '音楽が見つかりません');
   String get emptyQueue =>
-      choose(en: 'Queue is empty', zh: '当前队列为空', zhTw: '目前佇列為空');
-  String get noLyrics => choose(en: 'No lyrics', zh: '暂无歌词', zhTw: '暫無歌詞');
+      choose(en: 'Queue is empty', zh: '当前队列为空', zhTw: '目前佇列為空', ja: 'キューは空です');
+  String get noLyrics => choose(en: 'No lyrics', zh: '暂无歌词', zhTw: '暫無歌詞', ja: '歌詞がありません');
   String get expandLyrics =>
-      choose(en: 'Expand lyrics', zh: '展开歌词', zhTw: '展開歌詞');
+      choose(en: 'Expand lyrics', zh: '展开歌词', zhTw: '展開歌詞', ja: '歌詞を展開');
   String get collapseLyrics =>
-      choose(en: 'Collapse lyrics', zh: '收起歌词', zhTw: '收合歌詞');
+      choose(en: 'Collapse lyrics', zh: '收起歌词', zhTw: '收合歌詞', ja: '歌詞を閉じる');
   String playingFrom(String source) => choose(
-      en: 'Playing from $source', zh: '播放自 $source', zhTw: '播放自 $source');
+      en: 'Playing from $source', zh: '播放自 $source', zhTw: '播放自 $source', ja: '$source から再生中');
   String get musicLibrarySource =>
-      choose(en: 'Library', zh: '音乐库', zhTw: '音樂庫');
+      choose(en: 'Song Library', zh: '歌曲库', zhTw: '歌曲庫', ja: '曲ライブラリ');
 
   String sourceNameFromString(String? sourceType, {String? fallback}) {
     switch (sourceType) {
@@ -261,7 +309,7 @@ class UiTexts {
       case 'navidrome':
         return 'Navidrome';
       case 'directUrl':
-        return choose(en: 'Direct URL', zh: '直链音乐', zhTw: '直連音樂');
+        return choose(en: 'Direct URL', zh: '直链音乐', zhTw: '直連音樂', ja: '直接URL');
       default:
         return fallback?.trim().isNotEmpty == true
             ? fallback!.trim()
@@ -282,7 +330,7 @@ class UiTexts {
       case MusicSourceType.navidrome:
         return 'Navidrome';
       case MusicSourceType.directUrl:
-        return choose(en: 'Direct URL', zh: '直链音乐', zhTw: '直連音樂');
+        return choose(en: 'Direct URL', zh: '直链音乐', zhTw: '直連音樂', ja: '直接URL');
     }
   }
 }

@@ -32,7 +32,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nowPlayingTab => '播放中';
 
   @override
-  String get libraryTab => '资料库';
+  String get libraryTab => '歌曲库';
 
   @override
   String get roamTab => '漫游';
@@ -650,7 +650,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nowPlayingLabel => '播放中';
 
   @override
-  String get libraryLabel => '资料库';
+  String get libraryLabel => '歌曲库';
 
   @override
   String get roamLabel => '漫游';
@@ -806,7 +806,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectArtistTitle => '选择艺术家';
 
   @override
-  String get backToLibraryTooltip => '返回资料库';
+  String get backToLibraryTooltip => '返回歌曲库';
 
   @override
   String get appWatermark => '音乐';
@@ -903,10 +903,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get relatedThoughts => '相关想法';
 
   @override
-  String get yourLibrary => '您的资料库';
+  String get yourLibrary => '您的歌曲库';
 
   @override
-  String get errorLoadingLibrary => '加载资料库时出错';
+  String get errorLoadingLibrary => '加载歌曲库时出错';
 
   @override
   String get searchResults => '搜索结果';
@@ -1342,7 +1342,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get nowPlayingTab => '播放中';
 
   @override
-  String get libraryTab => '音樂庫';
+  String get libraryTab => '歌曲庫';
 
   @override
   String get roamTab => '探索';
@@ -1960,7 +1960,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get nowPlayingLabel => '播放中';
 
   @override
-  String get libraryLabel => '音樂庫';
+  String get libraryLabel => '歌曲庫';
 
   @override
   String get roamLabel => '探索';
@@ -2116,7 +2116,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get selectArtistTitle => '選擇藝術家';
 
   @override
-  String get backToLibraryTooltip => '返回資料庫';
+  String get backToLibraryTooltip => '返回歌曲庫';
 
   @override
   String get appWatermark => '音樂';
@@ -2213,10 +2213,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get relatedThoughts => '相關想法';
 
   @override
-  String get yourLibrary => '您的資料庫';
+  String get yourLibrary => '您的歌曲庫';
 
   @override
-  String get errorLoadingLibrary => '載入資料庫時發生錯誤';
+  String get errorLoadingLibrary => '載入歌曲庫時發生錯誤';
 
   @override
   String get searchResults => '搜尋結果';

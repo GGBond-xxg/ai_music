@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logger/logger.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../providers/spotify_provider.dart';
@@ -23,10 +24,13 @@ class Library extends StatefulWidget {
 }
 
 class _LibraryState extends State<Library> {
+  static const _layoutModeKey = 'spotoolfy.library.layout_mode.v1';
+
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   bool _wasAuthenticated = false; // Track previous auth state
   VoidCallback? _refreshLibraryCallback;
+  LibraryLayoutMode _layoutMode = LibraryLayoutMode.grid;
 
   // 缓存变量
   Size? _cachedScreenSize;
@@ -39,6 +43,29 @@ class _LibraryState extends State<Library> {
     final searchProvider = Provider.of<SearchProvider>(context, listen: false);
     _searchController.text = searchProvider.searchQuery;
     _searchController.addListener(_onSearchChanged);
+    _loadLayoutMode();
+  }
+
+
+  Future<void> _loadLayoutMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString(_layoutModeKey);
+    if (!mounted) return;
+    setState(() {
+      _layoutMode = value == LibraryLayoutMode.list.name
+          ? LibraryLayoutMode.list
+          : LibraryLayoutMode.grid;
+    });
+  }
+
+  Future<void> _toggleLayoutMode() async {
+    HapticFeedback.lightImpact();
+    final next = _layoutMode == LibraryLayoutMode.grid
+        ? LibraryLayoutMode.list
+        : LibraryLayoutMode.grid;
+    setState(() => _layoutMode = next);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_layoutModeKey, next.name);
   }
 
   @override
@@ -86,6 +113,21 @@ class _LibraryState extends State<Library> {
     _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
+  }
+
+
+  String _localizedViewAsList(BuildContext context) {
+    final languageCode = Localizations.localeOf(context).languageCode;
+    if (languageCode == 'zh') return '列表';
+    if (languageCode == 'ja') return 'リスト';
+    return 'List';
+  }
+
+  String _localizedViewAsGrid(BuildContext context) {
+    final languageCode = Localizations.localeOf(context).languageCode;
+    if (languageCode == 'zh') return '格子';
+    if (languageCode == 'ja') return 'グリッド';
+    return 'Grid';
   }
 
   @override
@@ -145,8 +187,11 @@ class _LibraryState extends State<Library> {
                         decoration: InputDecoration(
                           hintText: AppLocalizations.of(context)!.searchHint,
                           prefixIcon: const Icon(Icons.search),
-                          suffixIcon: _searchController.text.isNotEmpty
-                              ? IconButton(
+                          suffixIcon: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (_searchController.text.isNotEmpty)
+                                IconButton(
                                   icon: const Icon(Icons.clear),
                                   tooltip:
                                       AppLocalizations.of(context)!.clearSearch,
@@ -156,8 +201,20 @@ class _LibraryState extends State<Library> {
                                     searchProvider.clearSearch();
                                     _searchFocusNode.unfocus();
                                   },
-                                )
-                              : null,
+                                ),
+                              IconButton(
+                                icon: Icon(
+                                  _layoutMode == LibraryLayoutMode.grid
+                                      ? Icons.view_list_rounded
+                                      : Icons.grid_view_rounded,
+                                ),
+                                tooltip: _layoutMode == LibraryLayoutMode.grid
+                                    ? _localizedViewAsList(context)
+                                    : _localizedViewAsGrid(context),
+                                onPressed: _toggleLayoutMode,
+                              ),
+                            ],
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.0),
                             borderSide: BorderSide.none,
@@ -193,6 +250,7 @@ class _LibraryState extends State<Library> {
                           : Consumer<LibraryProvider>(
                               builder: (context, libraryProvider, child) {
                                 return LibrarySection(
+                                  layoutMode: _layoutMode,
                                   registerRefreshCallback: (callback) {
                                     _refreshLibraryCallback = callback;
                                   },

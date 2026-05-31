@@ -146,7 +146,7 @@ abstract class AppLocalizations {
   /// No description provided for @libraryTab.
   ///
   /// In en, this message translates to:
-  /// **'Library'**
+  /// **'Song Library'**
   String get libraryTab;
 
   /// No description provided for @roamTab.
@@ -1298,7 +1298,7 @@ abstract class AppLocalizations {
   /// No description provided for @libraryLabel.
   ///
   /// In en, this message translates to:
-  /// **'Library'**
+  /// **'Song Library'**
   String get libraryLabel;
 
   /// No description provided for @roamLabel.
@@ -1598,7 +1598,7 @@ abstract class AppLocalizations {
   /// No description provided for @backToLibraryTooltip.
   ///
   /// In en, this message translates to:
-  /// **'Back to library'**
+  /// **'Back to song library'**
   String get backToLibraryTooltip;
 
   /// No description provided for @appWatermark.
@@ -1772,13 +1772,13 @@ abstract class AppLocalizations {
   /// No description provided for @yourLibrary.
   ///
   /// In en, this message translates to:
-  /// **'YOUR LIBRARY'**
+  /// **'YOUR SONG LIBRARY'**
   String get yourLibrary;
 
   /// No description provided for @errorLoadingLibrary.
   ///
   /// In en, this message translates to:
-  /// **'Error loading library'**
+  /// **'Error loading song library'**
   String get errorLoadingLibrary;
 
   /// No description provided for @searchResults.

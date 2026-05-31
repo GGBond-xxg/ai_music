@@ -32,7 +32,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get nowPlayingTab => '再生中';
 
   @override
-  String get libraryTab => 'ライブラリ';
+  String get libraryTab => '曲ライブラリ';
 
   @override
   String get roamTab => '探索';
@@ -652,7 +652,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get nowPlayingLabel => '再生中';
 
   @override
-  String get libraryLabel => 'ライブラリ';
+  String get libraryLabel => '曲ライブラリ';
 
   @override
   String get roamLabel => '探索';
@@ -809,7 +809,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get selectArtistTitle => 'アーティストを選択';
 
   @override
-  String get backToLibraryTooltip => 'ライブラリに戻る';
+  String get backToLibraryTooltip => '曲ライブラリに戻る';
 
   @override
   String get appWatermark => 'Spotoolfy';
@@ -906,10 +906,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get relatedThoughts => '関連思考';
 
   @override
-  String get yourLibrary => 'あなたのライブラリ';
+  String get yourLibrary => 'あなたの曲ライブラリ';
 
   @override
-  String get errorLoadingLibrary => 'ライブラリの読み込みエラー';
+  String get errorLoadingLibrary => '曲ライブラリの読み込みエラー';
 
   @override
   String get searchResults => '検索結果';

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../providers/library_provider.dart';
 import '../services/ui_texts.dart';
 import '../utils/responsive.dart';
@@ -11,24 +9,23 @@ import 'library_grid.dart';
 class LibrarySection extends StatefulWidget {
   final Function(Function() refreshCallback)? registerRefreshCallback;
   final Function(VoidCallback)? registerScrollToTopCallback;
+  final LibraryLayoutMode layoutMode;
 
   const LibrarySection({
     super.key,
     this.registerRefreshCallback,
     this.registerScrollToTopCallback,
+    this.layoutMode = LibraryLayoutMode.grid,
   });
 
   @override
   State<LibrarySection> createState() => _LibrarySectionState();
 }
 
-enum _LibraryLayoutMode { grid, list }
+enum LibraryLayoutMode { grid, list }
 
 class _LibrarySectionState extends State<LibrarySection> {
-  static const _layoutModeKey = 'spotoolfy.library.layout_mode.v1';
-
   final ScrollController _scrollController = ScrollController();
-  _LibraryLayoutMode _layoutMode = _LibraryLayoutMode.grid;
 
   @override
   void initState() {
@@ -37,8 +34,6 @@ class _LibrarySectionState extends State<LibrarySection> {
     widget.registerRefreshCallback?.call(_refreshData);
     widget.registerScrollToTopCallback?.call(_scrollToTop);
 
-    _loadLayoutMode();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final libraryProvider =
           Provider.of<LibraryProvider>(context, listen: false);
@@ -46,25 +41,6 @@ class _LibrarySectionState extends State<LibrarySection> {
         _refreshData();
       }
     });
-  }
-
-  Future<void> _loadLayoutMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    final value = prefs.getString(_layoutModeKey);
-    if (!mounted) return;
-    setState(() {
-      _layoutMode = value == _LibraryLayoutMode.list.name
-          ? _LibraryLayoutMode.list
-          : _LibraryLayoutMode.grid;
-    });
-  }
-
-  Future<void> _setLayoutMode(_LibraryLayoutMode mode) async {
-    if (_layoutMode == mode) return;
-    HapticFeedback.lightImpact();
-    setState(() => _layoutMode = mode);
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_layoutModeKey, mode.name);
   }
 
   @override
@@ -133,49 +109,24 @@ class _LibrarySectionState extends State<LibrarySection> {
                         spacing: 8,
                         runSpacing: 8,
                         children: [
-                          FilterChip(
-                            selected: libraryProvider.showPlaylists,
-                            label: Text(t.localMusic),
-                            onSelected: (bool selected) {
-                              HapticFeedback.lightImpact();
-                              libraryProvider.setFilters(
-                                  showPlaylists: selected);
-                            },
-                          ),
-                          FilterChip(
-                            selected: libraryProvider.showAlbums,
-                            label: Text(t.nasServer),
-                            onSelected: (bool selected) {
-                              HapticFeedback.lightImpact();
-                              libraryProvider.setFilters(showAlbums: selected);
-                            },
-                          ),
+                          for (final sourceType
+                              in libraryProvider.availableSourceTypes)
+                            FilterChip(
+                              selected:
+                                  libraryProvider.isSourceFilterEnabled(sourceType),
+                              label: Text(t.sourceName(sourceType)),
+                              onSelected: (bool selected) {
+                                HapticFeedback.lightImpact();
+                                libraryProvider.setSourceFilter(
+                                  sourceType,
+                                  selected,
+                                );
+                              },
+                            ),
                         ],
                       ),
                       const SizedBox(height: 12),
                     ],
-                    Row(
-                      children: [
-                        SegmentedButton<_LibraryLayoutMode>(
-                          segments: [
-                            ButtonSegment<_LibraryLayoutMode>(
-                              value: _LibraryLayoutMode.grid,
-                              icon: const Icon(Icons.grid_view_rounded),
-                              label: Text(t.grid),
-                            ),
-                            ButtonSegment<_LibraryLayoutMode>(
-                              value: _LibraryLayoutMode.list,
-                              icon: const Icon(Icons.view_list_rounded),
-                              label: Text(t.list),
-                            ),
-                          ],
-                          selected: {_layoutMode},
-                          onSelectionChanged: (selection) {
-                            _setLayoutMode(selection.first);
-                          },
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -196,18 +147,7 @@ class _LibrarySectionState extends State<LibrarySection> {
   }
 
   bool _shouldShowSourceFilters(LibraryProvider libraryProvider) {
-    var hasLocal = false;
-    var hasRemote = false;
-    for (final item in libraryProvider.userPlaylists) {
-      final sourceType = item['sourceType']?.toString();
-      if (sourceType == 'localFile') {
-        hasLocal = true;
-      } else {
-        hasRemote = true;
-      }
-      if (hasLocal && hasRemote) return true;
-    }
-    return false;
+    return libraryProvider.availableSourceTypes.length > 1;
   }
 
   Widget _buildContentSliver(
@@ -274,7 +214,7 @@ class _LibrarySectionState extends State<LibrarySection> {
         if (!hasItems && !libraryProvider.isLoading)
           _buildEmptyState(context)
         else
-          _layoutMode == _LibraryLayoutMode.grid
+          widget.layoutMode == LibraryLayoutMode.grid
               ? LibraryGrid(
                   items: libraryProvider.filteredItems,
                   gridCrossAxisCount: gridCrossAxisCount,

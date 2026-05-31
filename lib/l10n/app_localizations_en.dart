@@ -32,7 +32,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nowPlayingTab => 'NowPlaying';
 
   @override
-  String get libraryTab => 'Library';
+  String get libraryTab => 'Song Library';
 
   @override
   String get roamTab => 'Roam';
@@ -669,7 +669,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nowPlayingLabel => 'NowPlaying';
 
   @override
-  String get libraryLabel => 'Library';
+  String get libraryLabel => 'Song Library';
 
   @override
   String get roamLabel => 'Roam';
@@ -830,7 +830,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectArtistTitle => 'Select Artist';
 
   @override
-  String get backToLibraryTooltip => 'Back to library';
+  String get backToLibraryTooltip => 'Back to song library';
 
   @override
   String get appWatermark => 'Music';
@@ -931,10 +931,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get relatedThoughts => 'Related Thoughts';
 
   @override
-  String get yourLibrary => 'YOUR LIBRARY';
+  String get yourLibrary => 'YOUR SONG LIBRARY';
 
   @override
-  String get errorLoadingLibrary => 'Error loading library';
+  String get errorLoadingLibrary => 'Error loading song library';
 
   @override
   String get searchResults => 'SEARCH RESULTS';

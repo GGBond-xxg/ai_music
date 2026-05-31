@@ -1,6 +1,4 @@
 //nowplaying.dart
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:music/utils/responsive.dart';
@@ -23,6 +21,7 @@ class _NowPlayingState extends State<NowPlaying> {
     setState(() {
       _lyricsExpanded = !_lyricsExpanded;
     });
+    lyricsCenterLineRequest.value++;
   }
 
   @override
@@ -32,10 +31,7 @@ class _NowPlayingState extends State<NowPlaying> {
 
     return Scaffold(
       body: LayoutBuilder(
-        builder: (context, constraints) {
-          final toggleTop = _lyricsExpanded
-              ? 16.0
-              : math.min(math.max(constraints.maxHeight * 0.43, 270.0), 360.0);
+        builder: (context, _) {
           final toggleRight = isLargeScreen ? 12.0 : 18.0;
 
           return Stack(
@@ -77,17 +73,12 @@ class _NowPlayingState extends State<NowPlaying> {
                     ),
                   ],
                 ),
-              AnimatedPositioned(
-                duration: const Duration(milliseconds: 260),
-                curve: Curves.easeOutCubic,
-                top: toggleTop,
+              Positioned(
                 right: toggleRight,
-                child: SafeArea(
-                  bottom: false,
-                  child: _LyricsToggleButton(
-                    expanded: _lyricsExpanded,
-                    onPressed: _toggleLyricsExpanded,
-                  ),
+                bottom: 88 + MediaQuery.paddingOf(context).bottom,
+                child: _LyricsToggleButton(
+                  expanded: _lyricsExpanded,
+                  onPressed: _toggleLyricsExpanded,
                 ),
               ),
             ],

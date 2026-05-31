@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/music_track.dart';
 import 'spotify_provider.dart';
 
 class LibraryProvider extends ChangeNotifier {
@@ -11,8 +12,7 @@ class LibraryProvider extends ChangeNotifier {
   final SpotifyProvider _spotifyProvider;
 
   List<Map<String, dynamic>> _items = [];
-  bool _showLocal = true;
-  bool _showRemote = true;
+  final Set<MusicSourceType> _enabledSourceTypes = <MusicSourceType>{};
   bool _isLoading = false;
   bool _isLoadingMore = false;
   bool _isFirstLoad = true;
@@ -21,8 +21,21 @@ class LibraryProvider extends ChangeNotifier {
 
   List<Map<String, dynamic>> get userPlaylists => _items;
   List<Map<String, dynamic>> get userSavedAlbums => _items;
-  bool get showPlaylists => _showLocal;
-  bool get showAlbums => _showRemote;
+  List<MusicSourceType> get availableSourceTypes {
+    final types = <MusicSourceType>{};
+    for (final item in _items) {
+      final sourceName = item['sourceType']?.toString();
+      final type = _sourceTypeFromName(sourceName);
+      if (type != null) types.add(type);
+    }
+    final sorted = types.toList(growable: false)..sort((a, b) => a.index.compareTo(b.index));
+    return sorted;
+  }
+
+  bool isSourceFilterEnabled(MusicSourceType type) {
+    _ensureEnabledSources();
+    return _enabledSourceTypes.contains(type);
+  }
   bool get isLoading => _isLoading;
   bool get isLoadingMore => _isLoadingMore;
   bool get isFirstLoad => _isFirstLoad;
@@ -31,34 +44,58 @@ class LibraryProvider extends ChangeNotifier {
   bool get hasData => _items.isNotEmpty;
 
   List<Map<String, dynamic>> get filteredItems {
+    _ensureEnabledSources();
+    if (availableSourceTypes.length <= 1) return List.unmodifiable(_items);
     return _items.where((item) {
-      final sourceType = item['sourceType']?.toString();
-      final isLocal = sourceType == 'localFile';
-      if (isLocal && !_showLocal) return false;
-      if (!isLocal && !_showRemote) return false;
-      return true;
+      final sourceName = item['sourceType']?.toString();
+      final type = _sourceTypeFromName(sourceName);
+      if (type == null) return true;
+      return _enabledSourceTypes.contains(type);
     }).toList(growable: false);
+  }
+
+
+  MusicSourceType? _sourceTypeFromName(String? sourceName) {
+    if (sourceName == null) return null;
+    for (final type in MusicSourceType.values) {
+      if (type.name == sourceName) return type;
+    }
+    return null;
   }
 
   void _syncFromSource() {
     _items = _spotifyProvider.libraryItems;
+    _ensureEnabledSources();
     _isFirstLoad = false;
     _isLoading = false;
     _errorMessage = null;
     notifyListeners();
   }
 
-  void setFilters({bool? showPlaylists, bool? showAlbums}) {
-    var changed = false;
-    if (showPlaylists != null && showPlaylists != _showLocal) {
-      _showLocal = showPlaylists;
-      changed = true;
+  void _ensureEnabledSources() {
+    final types = availableSourceTypes;
+    if (types.isEmpty) {
+      _enabledSourceTypes.clear();
+      return;
     }
-    if (showAlbums != null && showAlbums != _showRemote) {
-      _showRemote = showAlbums;
-      changed = true;
+    final typeSet = types.toSet();
+    _enabledSourceTypes.removeWhere((type) => !typeSet.contains(type));
+    if (_enabledSourceTypes.isEmpty) {
+      _enabledSourceTypes.addAll(types);
     }
-    if (changed) notifyListeners();
+  }
+
+  void setSourceFilter(MusicSourceType type, bool enabled) {
+    _ensureEnabledSources();
+    if (enabled) {
+      _enabledSourceTypes.add(type);
+    } else {
+      _enabledSourceTypes.remove(type);
+      if (_enabledSourceTypes.isEmpty) {
+        _enabledSourceTypes.add(type);
+      }
+    }
+    notifyListeners();
   }
 
   Future<void> loadData({bool forceRefresh = false}) async {

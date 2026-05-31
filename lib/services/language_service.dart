@@ -17,6 +17,9 @@ String appNameForLocale(Locale? locale) {
     }
     return '音乐';
   }
+  if (languageCode == 'ja') {
+    return '音楽';
+  }
   return 'Music';
 }
 
@@ -31,6 +34,7 @@ class LanguageService {
   // 只保留实际使用的语言。其他系统语言会回退到英文 UI / Music。
   static const List<Locale> supportedLocales = [
     Locale('en'),
+    Locale('ja'),
     Locale('zh'),
     Locale('zh', 'TW'),
   ];
@@ -129,6 +133,8 @@ class LanguageService {
     switch (locale.toString()) {
       case 'en':
         return 'English';
+      case 'ja':
+        return '日本語';
       case 'zh':
         return '简体中文';
       case 'zh_TW':

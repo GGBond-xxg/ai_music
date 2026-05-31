@@ -18,7 +18,7 @@ class _SamplePoint {
 
 /// 稀疏索引检查点 - "路标"系统的核心数据结构
 class IndexCheckpoint {
-  final int offset;      // 在资料库中的位置
+  final int offset;      // 在歌曲库中的位置
   final DateTime date;   // 该位置的时间戳
 
   IndexCheckpoint({
@@ -763,7 +763,7 @@ class TimeMachineService {
 
   // ============ 智能预测优化算法 ============
 
-  /// 采样用户资料库，计算歌曲添加速率
+  /// 采样用户歌曲库，计算歌曲添加速率
   /// 返回采样点列表，用于预测目标日期的位置
   Future<List<_SamplePoint>> _sampleLibrary({
     int sampleSize = 200,
@@ -772,7 +772,7 @@ class TimeMachineService {
     final samples = <_SamplePoint>[];
 
     try {
-      _logger.d('开始采样资料库：采样 $sampleSize 首歌，间隔 $sampleInterval');
+      _logger.d('开始采样歌曲库：采样 $sampleSize 首歌，间隔 $sampleInterval');
 
       for (int offset = 0; offset < sampleSize; offset += sampleInterval) {
         final tracks = await _spotifyService.getUserSavedTracks(
@@ -851,7 +851,7 @@ class TimeMachineService {
     _logger.i('开始智能搜索：目标区间 [$targetStart, $targetEnd]');
 
     try {
-      // 步骤 1: 采样资料库
+      // 步骤 1: 采样歌曲库
       final samples = await _sampleLibrary(sampleSize: 200, sampleInterval: 100);
 
       if (samples.isEmpty) {

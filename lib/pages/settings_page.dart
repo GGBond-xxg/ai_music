@@ -506,8 +506,8 @@ class _AboutDialogContent extends StatelessWidget {
           children: [
             _AboutHeaderCard(scheme: scheme),
             const SizedBox(height: 18),
-            const _SectionTitle(
-              title: '技术栈 / Open Source',
+            _SectionTitle(
+              title: UiTexts.of(context).openSourceSection,
               icon: Icons.code_rounded,
             ),
             const SizedBox(height: 8),
@@ -516,13 +516,13 @@ class _AboutDialogContent extends StatelessWidget {
               const SizedBox(height: 8),
             ],
             const SizedBox(height: 18),
-            const _SectionTitle(
-              title: '赞助 / Donate',
+            _SectionTitle(
+              title: UiTexts.of(context).donateSection,
               icon: Icons.volunteer_activism_rounded,
             ),
             const SizedBox(height: 8),
             Text(
-              '如果这个项目对你有帮助，欢迎赞助支持后续维护。',
+              UiTexts.of(context).donateDescription,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: scheme.onSurfaceVariant,
                   ),
@@ -585,7 +585,7 @@ class _AboutHeaderCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "To be honest, AI wrote most of it. It's really useful.",
+                  UiTexts.of(context).aboutAppTagline,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -645,9 +645,66 @@ class _AboutLinkTile extends StatelessWidget {
 
     if (!ok && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('无法打开：${item.name}')),
+        SnackBar(content: Text(UiTexts.of(context).openFailed(item.name))),
       );
     }
+  }
+
+
+  String? _localizedSubtitle(BuildContext context) {
+    final t = UiTexts.of(context);
+    switch (item.name) {
+      case 'Flutter':
+        return t.choose(
+          en: 'Cross-platform UI framework',
+          zh: '跨平台 UI 框架',
+          zhTw: '跨平台 UI 框架',
+          ja: 'クロスプラットフォーム UI フレームワーク',
+        );
+      case 'Dart':
+        return t.choose(
+          en: 'Programming language',
+          zh: '编程语言',
+          zhTw: '程式語言',
+          ja: 'プログラミング言語',
+        );
+      case 'ChatGPT':
+        return t.choose(
+          en: 'AI development assistant',
+          zh: 'AI 开发助手',
+          zhTw: 'AI 開發助手',
+          ja: 'AI 開発アシスタント',
+        );
+      case 'Media_kit':
+        return t.choose(
+          en: 'Audio playback engine',
+          zh: '音频播放引擎',
+          zhTw: '音訊播放引擎',
+          ja: 'オーディオ再生エンジン',
+        );
+      case 'Spotoolfy Github':
+        return t.choose(
+          en: 'Inspired by the spotoolfy project',
+          zh: '灵感来自 spotoolfy 项目',
+          zhTw: '靈感來自 spotoolfy 專案',
+          ja: 'spotoolfy プロジェクトから着想',
+        );
+      case 'Spotoolfy':
+        return t.choose(
+          en: 'Spotoolfy official website',
+          zh: 'Spotoolfy 官方网站',
+          zhTw: 'Spotoolfy 官方網站',
+          ja: 'Spotoolfy 公式サイト',
+        );
+      case 'My GitHub':
+        return t.choose(
+          en: 'Some small pieces written with AI.',
+          zh: '一些用 AI 写的小作品。',
+          zhTw: '一些用 AI 寫的小作品。',
+          ja: 'AI で作った小さな作品集。',
+        );
+    }
+    return item.subtitle;
   }
 
   Future<void> _copyUrl(BuildContext context) async {
@@ -656,13 +713,14 @@ class _AboutLinkTile extends StatelessWidget {
     if (!context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${item.name} 链接已复制')),
+      SnackBar(content: Text(UiTexts.of(context).linkCopied(item.name))),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final subtitle = _localizedSubtitle(context);
 
     return Material(
       color: scheme.surfaceContainerHighest.withValues(alpha: 0.45),
@@ -688,11 +746,10 @@ class _AboutLinkTile extends StatelessWidget {
                       item.name,
                       style: const TextStyle(fontWeight: FontWeight.w800),
                     ),
-                    if (item.subtitle != null &&
-                        item.subtitle!.trim().isNotEmpty) ...[
+                    if (subtitle != null && subtitle.trim().isNotEmpty) ...[
                       const SizedBox(height: 2),
                       Text(
-                        item.subtitle!,
+                        subtitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -704,7 +761,7 @@ class _AboutLinkTile extends StatelessWidget {
                 ),
               ),
               IconButton(
-                tooltip: '复制链接',
+                tooltip: UiTexts.of(context).copyLink,
                 onPressed: () => _copyUrl(context),
                 icon: const Icon(Icons.copy_rounded, size: 18),
               ),
@@ -728,7 +785,7 @@ class _DonateTile extends StatelessWidget {
     if (!context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${item.name} 地址已复制')),
+      SnackBar(content: Text(UiTexts.of(context).addressCopied(item.name))),
     );
   }
 
@@ -785,7 +842,7 @@ class _DonateTile extends StatelessWidget {
               ),
             ),
             IconButton.filledTonal(
-              tooltip: '复制地址',
+              tooltip: UiTexts.of(context).copyAddress,
               onPressed: () => _copyAddress(context),
               icon: const Icon(Icons.copy_rounded, size: 18),
             ),

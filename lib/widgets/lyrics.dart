@@ -13,6 +13,8 @@ import '../services/ui_texts.dart';
 import '../utils/lyrics_parser.dart';
 import '../utils/responsive.dart';
 
+final ValueNotifier<int> lyricsCenterLineRequest = ValueNotifier<int>(0);
+
 class LyricsWidget extends StatefulWidget {
   const LyricsWidget({super.key});
 
@@ -46,6 +48,7 @@ class _LyricsWidgetState extends State<LyricsWidget>
   @override
   void initState() {
     super.initState();
+    lyricsCenterLineRequest.addListener(_handleCenterLineRequest);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final item = context.read<SpotifyProvider>().currentTrack?['item']
@@ -56,6 +59,7 @@ class _LyricsWidgetState extends State<LyricsWidget>
 
   @override
   void dispose() {
+    lyricsCenterLineRequest.removeListener(_handleCenterLineRequest);
     _resumeAutoScrollTimer?.cancel();
     _hideQuickActionsTimer?.cancel();
     _scrollController.dispose();
@@ -320,6 +324,13 @@ class _LyricsWidgetState extends State<LyricsWidget>
     if (!_manualQuickActionsVisible) {
       setState(() => _manualQuickActionsVisible = true);
     }
+  }
+
+  void _handleCenterLineRequest() {
+    if (!_synced || _lyrics.isEmpty) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _jumpToCurrentLine();
+    });
   }
 
   void _jumpToCurrentLine() {

@@ -18,18 +18,20 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(radius),
-        ),
-        child: Icon(
-          icon,
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
+    final scheme = Theme.of(context).colorScheme;
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Material(
+        color: scheme.primaryContainer,
+        borderRadius: BorderRadius.circular(radius),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onPressed,
+          child: Icon(
+            icon,
+            color: scheme.onPrimaryContainer,
+          ),
         ),
       ),
     );

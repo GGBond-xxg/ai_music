@@ -918,14 +918,14 @@ class SpotifyProvider extends ChangeNotifier {
       contextName = contextTracks.isEmpty ? 'Album' : (contextTracks.first.album ?? _sourceLabel(contextTracks.first));
     } else if (type == 'playlist' || type == 'source') {
       contextTracks = _libraryTracks.where((track) => track.sourceType.name == id || _sourceLabel(track) == id).toList();
-      contextName = contextTracks.isEmpty ? '资料库' : _sourceLabel(contextTracks.first);
+      contextName = contextTracks.isEmpty ? '歌曲库' : _sourceLabel(contextTracks.first);
       contextType = 'source';
     } else if (type == 'track') {
       contextTracks = _libraryTracks.where((track) => track.id == id || track.uri == id).toList();
-      contextName = contextTracks.isEmpty ? '资料库' : _sourceLabel(contextTracks.first);
+      contextName = contextTracks.isEmpty ? '歌曲库' : _sourceLabel(contextTracks.first);
     } else {
       contextTracks = _libraryTracks;
-      contextName = '资料库';
+      contextName = '歌曲库';
     }
 
     if (contextTracks.isEmpty) contextTracks = _libraryTracks;
@@ -1007,7 +1007,7 @@ class SpotifyProvider extends ChangeNotifier {
     final contextTracks = tracks.isEmpty ? _libraryTracks : tracks;
     return {
       'id': playlistId,
-      'name': contextTracks.isEmpty ? '资料库' : _sourceLabel(contextTracks.first),
+      'name': contextTracks.isEmpty ? '歌曲库' : _sourceLabel(contextTracks.first),
       'uri': 'local:playlist:$playlistId',
       'images': <Map<String, dynamic>>[],
       'tracks': {

@@ -283,7 +283,8 @@ class _PlayerState extends State<Player> with TickerProviderStateMixin {
   }
 
   /// 根据当前专辑封面更新主题色，本地封面和网络封面都支持。
-  void _updateThemeIfNeeded(BuildContext context, Map<String, dynamic>? displayTrack) {
+  void _updateThemeIfNeeded(
+      BuildContext context, Map<String, dynamic>? displayTrack) {
     final String? currentImageUrl =
         displayTrack?['album']?['images']?[0]?['url'];
 
@@ -381,21 +382,6 @@ class _PlayerState extends State<Player> with TickerProviderStateMixin {
                   child: Stack(
                     children: [
                       _buildMainContent(displayTrack, spotifyProvider),
-                      Positioned(
-                        bottom: 0,
-                        left: 64,
-                        child: MyButton(
-                          width: 64,
-                          height: 64,
-                          radius: 20,
-                          icon: _getPlayModeIcon(
-                              context.watch<SpotifyProvider>().currentMode),
-                          onPressed: () {
-                            HapticFeedback.lightImpact();
-                            spotifyProvider.togglePlayMode();
-                          },
-                        ),
-                      ),
                       _buildDragIndicators(),
                     ],
                   ),
@@ -544,6 +530,22 @@ class _PlayerState extends State<Player> with TickerProviderStateMixin {
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
           child: albumArtWidget, // 将原始封面放在这里
+        ),
+
+        Positioned(
+          left: -1,
+          bottom: 0,
+          child: MyButton(
+            width: 62,
+            height: 62,
+            radius: 15,
+            icon:
+                _getPlayModeIcon(context.watch<SpotifyProvider>().currentMode),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              context.read<SpotifyProvider>().togglePlayMode();
+            },
+          ),
         ),
 
         // 2. 条件渲染的按钮层 (保持在顶层)
@@ -989,8 +991,8 @@ class _PlayerState extends State<Player> with TickerProviderStateMixin {
                     ),
                   ),
                   Positioned(
-                    bottom: max(stackHeight * 0.02, 10), // 确保至少10px底部边距，避免负值
-                    left: stackWidth * 0.10, // 距离左边 10% container 宽度
+                    bottom: (stackHeight - artDimension) / 2,
+                    left: (stackWidth - artDimension) / 2,
                     child: MyButton(
                       width: 64,
                       height: 64,
