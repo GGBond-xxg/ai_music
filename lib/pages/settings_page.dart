@@ -59,12 +59,6 @@ const List<AboutLinkItem> aboutLinks = [
     url: 'https://dart.dev',
   ),
   AboutLinkItem(
-    name: 'GitHub',
-    subtitle: 'Open-source project hosting',
-    icon: Icons.hub_rounded,
-    url: 'https://github.com',
-  ),
-  AboutLinkItem(
     name: 'ChatGPT',
     subtitle: 'AI development assistant',
     icon: Icons.smart_toy_outlined,
@@ -77,27 +71,21 @@ const List<AboutLinkItem> aboutLinks = [
     url: 'https://pub.dev/packages/media_kit',
   ),
   AboutLinkItem(
-    name: 'Jellyfin',
-    subtitle: 'Self-hosted media server',
-    icon: Icons.cast_rounded,
-    url: 'https://jellyfin.org',
+    name: 'Spotoolfy Github',
+    subtitle: 'Inspired by the spotoolfy project',
+    icon: Icons.web,
+    url: 'https://github.com/p2o51/spotoolfy_flutter',
   ),
   AboutLinkItem(
-    name: 'Emby',
-    subtitle: 'Personal media server',
-    icon: Icons.connected_tv_rounded,
-    url: 'https://emby.media',
-  ),
-  AboutLinkItem(
-    name: 'Navidrome',
-    subtitle: 'Subsonic compatible music server',
-    icon: Icons.cloud_queue_rounded,
-    url: 'https://www.navidrome.org',
+    name: 'Spotoolfy',
+    subtitle: 'Spotoolfy official website',
+    icon: Icons.web_asset,
+    url: 'https://spotoolfy.gojyuplus.com/',
   ),
   AboutLinkItem(
     name: 'My GitHub',
     subtitle: 'Some small pieces written with AI.',
-    icon: Icons.code_rounded,
+    icon: Icons.edit_document,
     url: 'https://github.com/GGBond-xxg',
   ),
 ];
@@ -107,7 +95,7 @@ const List<AboutLinkItem> aboutLinks = [
 const List<DonateItem> donateItems = [
   DonateItem(
     name: 'Tron Network / TRC20',
-    icon: Icons.currency_exchange_rounded,
+    icon: Icons.monetization_on,
     address: 'TXnGST3Qa1qGeFGcEivbdwtUBrWgNKeHdz',
   ),
   DonateItem(
