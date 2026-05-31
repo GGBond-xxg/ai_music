@@ -1,4 +1,0 @@
-V10 dependency fix:
-- share_plus pinned to 10.1.4
-- file_picker pinned to 8.3.7
-These versions avoid win32 5.x/6.x solver conflict on Windows.

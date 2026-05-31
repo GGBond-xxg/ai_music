@@ -1,4 +1,0 @@
-v25
-- Android/iOS application id changed to com.chatlee.aimusic.
-- Fixed lyrics auto-scroll drift by using actual line widget positions instead of estimated line heights.
-- Auto-scroll now resumes after a short manual scroll pause and recenters the current lyric line.

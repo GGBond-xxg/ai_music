@@ -1,1 +1,0 @@
-v31: lyrics toggle icons changed to up/down; quick lyric action buttons fade in after manual scroll; added lyrics source button; center-current button hides actions after delay.

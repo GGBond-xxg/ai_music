@@ -1,6 +1,0 @@
-v13
-- 修复播放到下一首时歌词 ListView 触发 RenderViewport exceeded maximum layout cycles 的卡死问题。
-- 歌词列表改为 SingleChildScrollView + Column，避免 SliverList 在切歌和变高歌词行中反复校正 offset。
-- 自动滚动去掉递归 post-frame 重试，减少切歌布局抖动。
-- 清理 flutter analyze 的 RadioListTile deprecated 和 BuildContext async gap 信息。
-- 继续保留 AndroidX / NDK / Kotlin 构建稳定性配置。
