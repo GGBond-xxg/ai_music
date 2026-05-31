@@ -21,7 +21,26 @@ class _NowPlayingState extends State<NowPlaying> {
     setState(() {
       _lyricsExpanded = !_lyricsExpanded;
     });
-    lyricsCenterLineRequest.value++;
+
+    // 等待展开/收起动画和布局完成后，再触发一次“居中当前歌词行”。
+    // 这里多触发几次是为了适配不同手机帧率和布局耗时，避免刚点击时
+    // LyricsWidget 还没拿到新的高度，导致居中位置不准。
+    _requestCenterCurrentLyricAfterLayout();
+  }
+
+  void _requestCenterCurrentLyricAfterLayout() {
+    const delays = <Duration>[
+      Duration(milliseconds: 200),
+      Duration(milliseconds: 300),
+      Duration(milliseconds: 400),
+    ];
+
+    for (final delay in delays) {
+      Future.delayed(delay, () {
+        if (!mounted) return;
+        lyricsCenterLineRequest.value++;
+      });
+    }
   }
 
   @override
