@@ -473,6 +473,8 @@ class _AboutSection extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
+          insetPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           title: Text(t.aboutDialogTitle),
           contentPadding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
           content: const _AboutDialogContent(),
@@ -496,7 +498,7 @@ class _AboutDialogContent extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
 
     return SizedBox(
-      width: 430,
+      width: MediaQuery.of(context).size.width * 0.88,
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
