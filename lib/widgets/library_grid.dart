@@ -307,9 +307,14 @@ class _Artwork extends StatelessWidget {
             : File(url);
         return Image.file(
           file,
+          key: ValueKey(url),
           width: double.infinity,
           height: double.infinity,
           fit: BoxFit.cover,
+          cacheWidth: cacheSize,
+          cacheHeight: cacheSize,
+          gaplessPlayback: true,
+          filterQuality: FilterQuality.medium,
           errorBuilder: (context, _, __) => _fallbackArtwork(context),
         );
       } catch (_) {

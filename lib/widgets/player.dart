@@ -141,8 +141,12 @@ class _PlayerState extends State<Player> with TickerProviderStateMixin {
             : File(value);
         return Image.file(
           file,
-          key: key,
+          key: key ?? ValueKey(value),
           fit: fit,
+          cacheWidth: 900,
+          cacheHeight: 900,
+          gaplessPlayback: true,
+          filterQuality: FilterQuality.medium,
           errorBuilder: (context, _, __) =>
               Image.asset('assets/examples/CXOXO.png', fit: fit),
         );

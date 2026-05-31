@@ -39,6 +39,14 @@ final logger = Logger();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 本地音乐封面通常是从音频标签里提取出来的高清图片。
+  // 如果直接按原图解码，列表滑动一远就容易把顶部封面从 Flutter
+  // ImageCache 里挤出去，滑回顶部时又重新解码/读取，表现为重新加载。
+  // 这里适当放大图片缓存；实际列表缩略图仍会通过 cacheWidth/cacheHeight
+  // 按显示尺寸解码，避免占用过多内存。
+  PaintingBinding.instance.imageCache.maximumSize = 600;
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 180 << 20;
+
   MediaKit.ensureInitialized();
 
   final spotifyProvider = SpotifyProvider();
