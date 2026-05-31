@@ -1,0 +1,155 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../l10n/app_localizations.dart';
+import '../providers/search_provider.dart';
+import '../utils/responsive.dart';
+import 'library_grid.dart';
+import 'materialui.dart' as custom_ui;
+
+class SearchSection extends StatefulWidget {
+  final VoidCallback onBackPressed;
+
+  const SearchSection({
+    super.key,
+    required this.onBackPressed,
+  });
+
+  @override
+  State<SearchSection> createState() => _SearchSectionState();
+}
+
+class _SearchSectionState extends State<SearchSection> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<SearchProvider>(
+      builder: (context, searchProvider, child) {
+        final browseLayout = context.layoutType(ResponsivePageType.browse);
+        final gridCrossAxisCount = context.adaptiveColumns(
+          minTileWidth: browseLayout.defaultMinTileWidth,
+          min: 3,
+          max: 6,
+        );
+        final horizontalPadding = browseLayout.horizontalPadding;
+        final results = searchProvider.filteredResults;
+
+        return Column(
+          children: [
+            // Search results header with back button
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: 8,
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: widget.onBackPressed,
+                    tooltip: AppLocalizations.of(context)!.backToLibraryTooltip,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Center(
+                      child: custom_ui.IconHeader(
+                        icon: Icons.search,
+                        text: AppLocalizations.of(context)!.searchResults,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 48),
+                ],
+              ),
+            ),
+
+            // Loading indicator
+            if (searchProvider.isSearching)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: LinearProgressIndicator(),
+              ),
+
+            // Error message
+            if (searchProvider.errorMessage != null)
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  searchProvider.errorMessage!,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
+
+            // Search results using CustomScrollView for potential future sliver integration
+            Expanded(
+                child: CustomScrollView(
+              slivers: [
+                if (results.isEmpty && !searchProvider.isSearching)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: _buildEmptyResultsView(),
+                  )
+                else
+                  SliverPadding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: horizontalPadding),
+                    sliver: LibraryGrid(
+                      items: results,
+                      gridCrossAxisCount: gridCrossAxisCount,
+                      onItemTap: (item) => searchProvider.playItem(item),
+                    ),
+                  )
+              ],
+            )),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildEmptyResultsView() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 48,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.5),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              AppLocalizations.of(context)!.noResultsFound,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              AppLocalizations.of(context)!.tryDifferentKeywords,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.7),
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,800 @@
+{
+  "@@locale": "en",
+  "settingsTitle": "Settings",
+  "devicesTitle": "Devices",
+  "noDeviceFound": "No devices found",
+  "authorizeSpotifyButton": "Authorize Music",
+  "logoutSpotifyButton": "Logout from Music",
+  "loggedInAs": "Music: {username}",
+  "@loggedInAs": {
+    "description": "Status text showing the logged in Music username",
+    "placeholders": {
+      "username": {
+        "type": "String",
+        "example": "User123"
+      }
+    }
+  },
+  "nowPlayingTab": "NowPlaying",
+  "libraryTab": "Library",
+  "roamTab": "Roam",
+  "loginSuccess": "Logged in with Music",
+  "recordsTab": "RECORDS",
+  "queueTab": "QUEUE",
+  "lyricsTab": "LYRICS",
+  "devicesPageTitle": "Devices",
+  "noDevicesFound": "No devices found",
+  "sonosDeviceRestriction": "Please control this device using Music or Sonos app",
+  "deviceRestricted": "This device is not available",
+  "privateSession": "Private Session",
+  "currentDevice": "Current",
+  "editNote": "Edit Note",
+  "deleteNote": "Delete Note",
+  "cancel": "Cancel",
+  "confirmDelete": "Confirm Delete",
+  "deleteConfirmMessage": "Are you sure you want to delete this note? This action cannot be undone.",
+  "noNotes": "No notes added yet.",
+  "recordsAt": "Records at {time}",
+  "@recordsAt": {
+    "description": "Text showing when a record was created",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "12:30"
+      }
+    }
+  },
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "playbackFailed": "Playback failed: {error}",
+  "@playbackFailed": {
+    "description": "Error message when playback fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Connection error"
+      }
+    }
+  },
+  "searchHint": "Search songs, albums, artists...",
+  "clearSearch": "Clear search",
+  "playToGenerateInsights": "Play some music to generate insights!",
+  "generateInsights": "Insights",
+  "generating": "Generating...",
+  "collapse": "Collapse",
+  "expand": "Expand",
+  "noInsightsGenerated": "Could not generate insights from the provided history.",
+  "insightsTitle": "Insights",
+  "inspirationsTitle": "Inspirations",
+  "unknownArtist": "Unknown Artist",
+  "unknownTrack": "Unknown Track",
+  "failedToGenerateInsights": "Failed to generate insights: {error}",
+  "@failedToGenerateInsights": {
+    "description": "Error message when insights generation fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Connection error"
+      }
+    }
+  },
+  "copiedToClipboard": "Copied to clipboard",
+  "@copiedToClipboard": {
+    "description": "Message shown when something is copied to clipboard",
+    "placeholders": {
+      "type": {
+        "type": "String",
+        "example": "Text"
+      }
+    }
+  },
+  "musicPersonality": "Music Personality",
+  "insightsContent": "Insights Content",
+  "recommendedSong": "Recommended Song",
+  "addNote": "Add Note",
+  "noteHint": "Enter your note here",
+  "saveNote": "Save Note",
+  "noteSaved": "Note saved",
+  "errorSavingNote": "Error saving note: {error}",
+  "@errorSavingNote": {
+    "description": "Error message when saving note fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Connection error"
+      }
+    }
+  },
+  "notesTitle": "Notes",
+  "areYouSureDeleteNote": "Are you sure you want to delete this note?",
+  "delete": "Delete",
+  "noteDeleted": "Note deleted",
+  "errorDeletingNote": "Error deleting note: {error}",
+  "@errorDeletingNote": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noteUpdated": "Note updated successfully",
+  "errorUpdatingNote": "Error updating note: {error}",
+  "@errorUpdatingNote": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "lyricsFetching": "Fetching lyrics...",
+  "lyricsFound": "Lyrics found.",
+  "lyricsNotFoundForTrack": "No lyrics found for this track.",
+  "lyricsFetchError": "Error fetching lyrics: {error}",
+  "@lyricsFetchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "lyricsTranslating": "Translating lyrics...",
+  "lyricsTranslationSuccessful": "Translation successful.",
+  "lyricsTranslationError": "Error translating lyrics: {error}",
+  "@lyricsTranslationError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "lyricsTitle": "Lyrics",
+  "lyricsCopyModeTooltip": "Copy Lyrics Mode",
+  "lyricsTranslateTooltip": "Translate Lyrics",
+  "lyricsToggleAutoScrollTooltip": "Toggle Auto-Scroll",
+  "lyricsNotAvailable": "No lyrics available.",
+  "lyricsLoading": "Loading lyrics...",
+  "lyricsFailedToLoad": "Failed to load lyrics.",
+  "lyricsCopyModeSnackbar": "Copy Lyrics Mode: Single repeat active, auto-scroll disabled.",
+  "couldNotGetCurrentTrackId": "Could not get current track ID.",
+  "translationFailed": "Translation failed: {error}",
+  "centerCurrentLine": "Center Current Line",
+  "translateLyrics": "Translate Lyrics",
+  "exitCopyModeResumeScroll": "Exit Copy Mode & Resume Scroll",
+  "enterCopyLyricsMode": "Enter Copy Lyrics Mode (Single Repeat)",
+  "translationTitle": "Translation",
+  "originalTitle": "Original",
+  "translatedByAttribution": "Translated by Gemini {version}",
+  "@translatedByAttribution": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "spiritLabel": "Spirit: {style}",
+  "@spiritLabel": {
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "copyToClipboard": "Copy to Clipboard",
+  "retranslateButton": "Retranslate",
+  "retranslating": "Retranslating...",
+  "translationStyleFaithful": "Faithful",
+  "translationStyleMelodramaticPoet": "Melodramatic Poet",
+  "translationStyleMachineClassic": "Machine Classic",
+  "translationStyleTooltipFaithful": "Current: Faithful Translation - Tap to change",
+  "translationStyleTooltipMelodramatic": "Current: Melodramatic Poet Translation - Tap to change",
+  "translationStyleTooltipMachine": "Current: Machine Translation - Tap to change",
+  "toggleTranslationStyle": "Toggle Translation Style",
+  "showTranslation": "Show Translation",
+  "showOriginal": "Show Original",
+  "closeTranslation": "Close",
+  "trackSaved": "Track saved to playlist",
+  "errorSavingTrack": "Error saving track: {error}",
+  "@errorSavingTrack": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "unknownAlbum": "Unknown Album",
+  "playlist": "Playlist",
+  "unknownContext": "Unknown Context",
+  "noTrackOrEmptyNote": "Cannot get track info or note is empty",
+  "logoutSuccess": "Logged out from Music",
+  "operationFailed": "Operation failed",
+  "invalidCredentialsError": "音乐源配置无效，请检查服务器地址、账号、密码或 API Key。",
+  "authenticationError": "Authentication failed: Invalid credentials or insufficient permissions.",
+  "tooManyRequestsError": "Too many requests. Please try again later.",
+  "loginLogoutFailed": "Login/Logout failed: {error}",
+  "@loginLogoutFailed": {
+    "description": "Error message for login or logout failure",
+    "placeholders": {
+      "error": {
+        "type": "Object",
+        "example": "Exception details"
+      }
+    }
+  },
+  "helpAction": "Help",
+  "setupTitle": "Setup",
+  "googleAiApiKeyTitle": "Google AI API key",
+  "googleAiApiKeySubtitle": "Set up your Google AI Studio API key for Gemini translation",
+  "spotifyApiTitle": "音乐源",
+  "spotifyApiSubtitle": "Set Music Client ID and Secret",
+  "tutorialTitle": "Tutorial",
+  "tutorialSubtitle": "See tutorial for setting up",
+  "generalTitle": "General",
+  "translationLanguageTitle": "Gemini's Language",
+  "translationLanguageSubtitle": "Choose the target language for translations and insights",
+  "translationStyleTitle": "Translation Style",
+  "translationStyleSubtitle": "Set Gemini's Spirit",
+  "autoTranslateLyricsTitle": "Auto-translate lyrics",
+  "autoTranslateLyricsSubtitle": "Translate lyrics automatically when translations are missing",
+  "copyLyricsAsSingleLineTitle": "Copy lyrics as single line",
+  "copyLyricsAsSingleLineSubtitle": "Replaces line breaks with spaces when copying",
+  "enableGemini3Title": "Enable Gemini 3",
+  "enableGemini3Subtitle": "Use Gemini 3 for more stable structure, but tested translation quality is similar",
+  "dataManagementTitle": "Data Management",
+  "exportDataTitle": "Export Data",
+  "exportDataSubtitle": "Export all data as JSON file",
+  "importDataTitle": "Import Data",
+  "importDataSubtitle": "Import data from exported JSON file",
+  "clearCacheTitle": "Clear All Cache",
+  "clearCacheSubtitle": "Clear lyrics and translation cache",
+  "geminiApiKeyDialogTitle": "Gemini API key",
+  "geminiApiKeyDialogHint": "Enter your Gemini API key",
+  "cancelButton": "Cancel",
+  "apiKeySaved": "Gemini API key saved",
+  "okButton": "OK",
+  "spotifyCredentialsDialogTitle": "音乐源",
+  "clientIdLabel": "Client ID",
+  "emptyCredentialsError": "Client ID is required.",
+  "invalidClientIdError": "Client ID must be a 32-character hex string.",
+  "credentialsSaved": "Music credentials saved",
+  "credentialsSaveFailed": "Failed to save credentials",
+  "languageDialogTitle": "Select Language",
+  "languageSaved": "Language setting saved",
+  "translationStyleDialogTitle": "Select Translation Style",
+  "translationStyleSaved": "Translation style saved",
+  "exportFailed": "Export failed or cancelled.",
+  "importDialogTitle": "Confirm Import",
+  "importDialogMessage": "Importing data will replace existing tracks and translations with the same identifiers, and add all records from the file. This cannot be undone. Are you sure you want to continue?\n\nEnsure the JSON file is valid and was previously exported from Music.",
+  "importButton": "Import Data",
+  "importSuccess": "Data imported successfully!",
+  "importFailed": "Failed to import data.",
+  "exportSuccess": "Data exported successfully!",
+  "clearCacheDialogTitle": "Confirm Clear Cache",
+  "clearCacheDialogMessage": "Are you sure you want to clear the lyrics and translation cache? This cannot be undone.",
+  "clearCacheButton": "Clear Cache",
+  "clearingCache": "Clearing cache...",
+  "cacheCleared": "Cache cleared successfully!",
+  "cacheClearFailed": "Failed to clear cache",
+  "@cacheClearFailed": {},
+  "failedToChangeLanguage": "Failed to change language: {error}",
+  "@failedToChangeLanguage": {
+    "description": "Error message when changing language fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  "failedToChangeStyle": "Failed to change translation style: {error}",
+  "@failedToChangeStyle": {
+    "description": "Error message when changing translation style fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Invalid style"
+      }
+    }
+  },
+  "noteContent": "Note Content",
+  "saveChanges": "Save",
+  "noLyricsToTranslate": "No lyrics to translate.",
+  "failedToSaveTranslation": "Failed to save fetched translation: {error}",
+  "failedToGetTranslation": "Failed to get translation.",
+  "copyLyricsModeHint": "Copy Lyrics Mode: Single repeat active, auto-scroll disabled.",
+  "exitCopyMode": "Exit Copy Mode & Resume Scroll",
+  "enterCopyMode": "Enter Copy Lyrics Mode (Single Repeat)",
+  "selectLyrics": "Select Lyrics",
+  "selectLyricsTooltip": "Select lyrics fragments for analysis or sharing",
+  "selectAll": "Select All",
+  "deselectAll": "Deselect All",
+  "noLyricsSelected": "Please select some lyrics first",
+  "askGemini": "Ask Gemini",
+  "sharePoster": "Share Poster",
+  "shareNote": "Share Note",
+  "copySelected": "Copy Selected",
+  "geminiAnalysisResult": "Gemini Analysis Result",
+  "lyricsTheme": "Theme",
+  "lyricsEmotion": "Emotion",
+  "lyricsMetaphor": "Metaphor and Symbolism",
+  "lyricsInterpretation": "In-depth Interpretation",
+  "lyricsReference": "References and Allusions",
+  "lyricsKeywordsExplanation": "Keywords Explanation",
+  "copyAnalysis": "Copy Analysis",
+  "analysisResultCopied": "Analysis result copied to clipboard",
+  "selectedLyricsCopied": "Copied {count} lines of lyrics",
+  "@selectedLyricsCopied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "posterGenerationFailed": "Poster generation failed: {error}",
+  "analysisFailed": "Analysis failed: {error}",
+  "@analysisFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noLyricsToSelect": "No lyrics available to select",
+  "posterLyricsLimitExceeded": "Maximum 10 lines of lyrics can be selected for poster generation",
+  "multiSelectMode": "Multi-select Mode",
+  "tapToSelectLyrics": "Tap lyric line to select",
+  "appTitle": "Music",
+  "nowPlayingLabel": "NowPlaying",
+  "libraryLabel": "Library",
+  "roamLabel": "Roam",
+  "tutorialButtonText": "Tutorial",
+  "languageEnglish": "English",
+  "languageSimplifiedChinese": "简体中文 (Simplified Chinese)",
+  "languageTraditionalChinese": "繁體中文 (Traditional Chinese)",
+  "collapseTooltip": "Collapse",
+  "expandTooltip": "Expand",
+  "incompleteRecordError": "Cannot proceed: Incomplete record information",
+  "optionsTitle": "Options",
+  "playFromTimestamp": "Play from {timestamp}",
+  "@playFromTimestamp": {
+    "description": "Button text to play from a specific timestamp",
+    "placeholders": {
+      "timestamp": {
+        "type": "String",
+        "example": "2:30"
+      }
+    }
+  },
+  "editNoteTitle": "Edit Note",
+  "ratedStatus": "Rated",
+  "noItemsFound": "No items found",
+  "cannotCreateSpotifyLink": "Cannot create Music link",
+  "cannotOpenSpotify": "Cannot open Music",
+  "failedToOpenSpotify": "Failed to open Music: {error}",
+  "@failedToOpenSpotify": {
+    "description": "Error message when failing to open Music",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Connection error"
+      }
+    }
+  },
+  "playlistsTab": "Playlists",
+  "albumsTab": "Albums",
+  "tryAgainButton": "Try Again",
+  "playTrackToSeeThoughts": "Play a track to see thoughts.",
+  "copyButtonText": "Copy",
+  "posterButtonLabel": "Poster",
+  "noteButtonLabel": "Note",
+  "lyricsAnalysisTitle": "Lyrics Analysis",
+  "regenerateAnalysisTooltip": "Regenerate Analysis",
+  "copyAllAnalysisTooltip": "Copy All Analysis",
+  "geminiGrounding": "Gemini's grounding...",
+  "retryButton": "Retry",
+  "noAnalysisResults": "No analysis results",
+  "noDeepAnalysisContent": "No deep analysis content for this lyric fragment",
+  "simpleContentExplanation": "This may be because the lyrics are relatively simple, or have no obvious metaphors, references, or literary devices",
+  "reanalyzeButton": "Re-analyze",
+  "onlyFoundDimensionsInfo": "Only displays analysis dimensions found in these lyrics",
+  "songInfoRegeneratedMessage": "Song information regenerated",
+  "songInformationTitle": "INFORMATION",
+  "regenerateTooltip": "Regenerate",
+  "noSongInfoAvailable": "No song information available",
+  "generateAIContent": "Generate AI song analysis and background info",
+  "generatingAIContent": "Generating...",
+  "deleteAIContent": "Delete AI analysis content",
+  "generatedByGemini": "Generated by Gemini {version}",
+  "@generatedByGemini": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "poweredByGoogleSearch": "Powered by Google Search Grounding",
+  "creationTimeTitle": "Creation Time",
+  "creationLocationTitle": "Creation Location",
+  "lyricistTitle": "Lyricist",
+  "composerTitle": "Composer",
+  "producerTitle": "Producer",
+  "songAnalysisTitle": "Song Analysis",
+  "selectArtistTitle": "Select Artist",
+  "backToLibraryTooltip": "Back to library",
+  "appWatermark": "Music",
+  "loadingAnalyzing": "Analyzing lyrics with AI...",
+  "loadingDecoding": "Decoding musical mysteries...",
+  "loadingSearching": "Searching for insights...",
+  "loadingThinking": "Gemini is thinking...",
+  "loadingGenerating": "Generating analysis...",
+  "loadingChatting": "Having a chat with {artist}...",
+  "@loadingChatting": {
+    "description": "Loading message mentioning artist",
+    "placeholders": {
+      "artist": {
+        "type": "String",
+        "example": "Taylor Swift"
+      }
+    }
+  },
+  "loadingDiscovering": "Discovering hidden meanings...",
+  "loadingExploring": "Exploring lyrical depths...",
+  "loadingUnraveling": "Unraveling poetic layers...",
+  "loadingConnecting": "Connecting emotional threads...",
+  "currentQueueEmpty": "Current queue is empty",
+  "queueUpNext": "Up Next",
+  "noQueueItems": "No upcoming tracks",
+  "queuePositionInfo": "Track {position} of {total}",
+  "@queuePositionInfo": {
+    "description": "Position indicator in queue",
+    "placeholders": {
+      "position": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+  "failedToSwitchDevice": "Failed to switch device: {error}",
+  "@failedToSwitchDevice": {
+    "description": "Error message when failing to switch device",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Connection error"
+      }
+    }
+  },
+  "deviceRestrictedMessage": "Device '{device}' is restricted and cannot be controlled via API.",
+  "@deviceRestrictedMessage": {
+    "description": "Message when device is restricted",
+    "placeholders": {
+      "device": {
+        "type": "String",
+        "example": "iPhone"
+      }
+    }
+  },
+  "insufficientPermissionsReauth": "Insufficient permissions, reauthorizing...",
+  "reauthFailedManualLogin": "Reauthorization failed, please login manually",
+  "badRequestError": "Bad request ({code}), please try again later or contact developer.",
+  "@badRequestError": {
+    "description": "Error message for bad request",
+    "placeholders": {
+      "code": {
+        "type": "String",
+        "example": "400"
+      }
+    }
+  },
+  "searchLyrics": "Search Lyrics",
+  "noCurrentTrackPlaying": "No track currently playing",
+  "cannotGetTrackInfo": "Cannot get current track information",
+  "lyricsSearchAppliedSuccess": "Lyrics successfully searched and applied",
+  "thoughts": "THOUGHTS",
+  "noTrack": "NO TRACK",
+  "noIdeasYet": "No ideas for this song yet.\nCome share the first idea!",
+  "relatedThoughts": "Related Thoughts",
+  "yourLibrary": "YOUR LIBRARY",
+  "errorLoadingLibrary": "Error loading library",
+  "searchResults": "SEARCH RESULTS",
+  "noResultsFound": "No results found",
+  "tryDifferentKeywords": "Try different keywords or check your spelling",
+  "infoLabel": "Info",
+  "playlistType": "Playlist",
+  "albumType": "Album",
+  "songType": "Song",
+  "artistType": "Artist",
+  "daysAgo": "Days Ago",
+  "hoursAgo": "Hours Ago",
+  "minsAgo": "Mins Ago",
+  "secsAgo": "Secs Ago",
+  "failedToPlayAlbum": "Failed to play album: {error}",
+  "@failedToPlayAlbum": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "rateAtLeastOneSongForPoster": "Rate at least one song before generating poster",
+  "failedToSharePoster": "Failed to share rating poster: {error}",
+  "@failedToSharePoster": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cannotPlayMissingTrackLink": "Cannot play: missing track link",
+  "failedToPlaySong": "Failed to play song: {error}",
+  "@failedToPlaySong": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToSaveRating": "Failed to save rating: {error}",
+  "@failedToSaveRating": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "albumDetails": "Album Details",
+  "titleCopied": "Title copied",
+  "playAlbum": "Play",
+  "rateAtLeastOneSongFirst": "Rate a few songs before sharing poster",
+  "shareAlbumRatingPoster": "Share album rating poster",
+  "hideQuickRating": "Hide quick rating",
+  "showQuickRating": "Show quick rating",
+  "currently": "Currently",
+  "savingChanges": "Saving...",
+  "saveAllChanges": "Save All Changes",
+  "generatingTooltip": "Generating...",
+  "generateAlbumInsights": "Generate Album Insights",
+  "collapseInsights": "Collapse insights",
+  "expandInsights": "Expand insights",
+  "noSongsRatedYet": "No songs rated yet",
+  "basedOnRatedSongs": "Based on {rated}/{total} songs",
+  "@basedOnRatedSongs": {
+    "placeholders": {
+      "rated": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "failedToGenerateAlbumInsights": "Failed to generate insights: {error}",
+  "@failedToGenerateAlbumInsights": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToLoadCache": "Failed to load cache: {error}",
+  "@failedToLoadCache": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "generatingAlbumInsights": "Generating album insights...",
+  "noInsightsAvailableTapToGenerate": "No insights available. Tap the button above to generate.",
+  "insightsEmptyRetryGenerate": "Insights are empty, try regenerating.",
+  "insightsGeneratedDaysAgo": "Insights generated {days} days ago",
+  "@insightsGeneratedDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsGeneratedHoursAgo": "Insights generated {hours} hours ago",
+  "@insightsGeneratedHoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsGeneratedMinutesAgo": "Insights generated {minutes} minutes ago",
+  "@insightsGeneratedMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsJustGenerated": "Insights just generated",
+  "refreshAlbum": "Refresh album",
+  "failedToLoadAlbum": "Failed to load album",
+  "unknownError": "Unknown error",
+  "unratedStatus": "Not rated",
+  "justNow": "Just now",
+  "minutesAgoShort": "{minutes}m ago",
+  "@minutesAgoShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgoShort": "{hours}h ago",
+  "@hoursAgoShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgoShort": "{days}d ago",
+  "@daysAgoShort": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTracksCount": "{count} tracks total",
+  "@totalTracksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "failedToPlayPlaylist": "Failed to play playlist: {error}",
+  "@failedToPlayPlaylist": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "playPlaylist": "Play Playlist",
+  "playlistDetails": "Playlist Details",
+  "refreshPlaylist": "Refresh playlist",
+  "createdBy": "Created by {owner}",
+  "@createdBy": {
+    "placeholders": {
+      "owner": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistTrackCount": "{count} tracks total",
+  "@playlistTrackCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "failedToLoadPlaylist": "Failed to load playlist",
+  "playlistTracksLabel": "Playlist tracks",
+  "deviceOperationNotSupported": "This device does not support this operation or is restricted. Please try playing music on other devices, or check your account type.",
+  "shareAlbumMessage": "I rated {albumName} by {artist} {score} on Music, rated {rated}/{total} songs.",
+  "@shareAlbumMessage": {
+    "placeholders": {
+      "albumName": {
+        "type": "String"
+      },
+      "artist": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      },
+      "rated": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "noRating": "No rating",
+  "retry": "Retry",
+  "unknownTrackName": "Unknown Track",
+  "albumInsightReadyStatus": "Album insights ready",
+  "clickToGenerateAlbumInsights": "Click the button on the right to generate insights for this album",
+  "failedToGenerateAlbumInsightsStatus": "Failed to generate album insights",
+  "providerQQMusic": "QQ Music",
+  "providerLRCLIB": "LRCLIB",
+  "providerNetease": "NetEase Cloud Music",
+  "playingFrom": "PLAYING FROM",
+  "playFromAlbum": "PLAY FROM ALBUM",
+  "playFromPlaylist": "PLAY FROM PLAYLIST",
+  "sharingStatus": "Sharing...",
+  "shareButton": "Share",
+  "filterAll": "All",
+  "filterFire": "Fire",
+  "filterNeutral": "Neutral",
+  "filterDown": "Down",
+  "filterRated": "Rated",
+  "statsTotal": "{count} notes",
+  "@statsTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchNotesHint": "Search notes...",
+  "swipeToDelete": "Delete",
+  "swipeToPlay": "Play",
+  "emptyNotesTitle": "No notes yet",
+  "emptyNotesSubtitle": "Start playing music and add your first note on the Now Playing page",
+  "todayReviewTitle": "Revisit",
+  "undoAction": "Undo",
+  "askMoreAboutTrack": "Ask more about this track",
+  "askFollowUpHint": "Ask anything about this song...",
+  "askFollowUpSend": "Send",
+  "followUpThinking": "Thinking...",
+  "followUpError": "Failed to get answer: {error}",
+  "@followUpError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "authFailureExceeded": "Authorization failed too many times. Please check your Music Client ID configuration.",
+  "timeMachineTitle": "Time Machine",
+  "timeMachineDateRange": "Select Date Range",
+  "timeMachineToday": "Today's Memories",
+  "timeMachineEmpty": "No memories found",
+  "timeMachineEmptyHint": "Try selecting a different date range to explore your music history",
+  "yearsAgoToday": "{years, plural, =1{1 year ago today} other{{years} years ago today}}",
+  "@yearsAgoToday": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "andMoreTracks": "+{count} more",
+  "@andMoreTracks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addedYearsAgo": "{years, plural, =1{Added 1 year ago} other{Added {years} years ago}} ({date})",
+  "@addedYearsAgo": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "ratingLabel": "Rating",
+  "lyricsSnapshotLabel": "Lyrics Snapshot",
+  "addNoteHint": "Add a note...",
+  "changesSaved": "Changes saved",
+  "play": "Play",
+  "randomReviewTitle": "Random Review",
+  "thisDayInHistory": "This Day in History",
+  "translationAvailable": "Translation Available",
+  "useNeteaseTranslation": "This song has a NetEase Cloud Music translation. Would you like to include it?",
+  "originalOnly": "Original Only",
+  "useTranslation": "Include Translation",
+  "translationStyleNetease": "NetEase Cloud",
+  "neteaseTranslationChineseOnly": "Chinese only",
+  "neteaseTranslationUnavailable": "Not available for this track",
+  "neteaseTranslationSaved": "NetEase translation saved",
+  "pressAgainToExit": "Press again to exit"
+}

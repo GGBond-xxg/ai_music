@@ -1,0 +1,1366 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
+class AppLocalizationsEn extends AppLocalizations {
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get devicesTitle => 'Devices';
+
+  @override
+  String get noDeviceFound => 'No devices found';
+
+  @override
+  String get authorizeSpotifyButton => 'Authorize Music';
+
+  @override
+  String get logoutSpotifyButton => 'Logout from Music';
+
+  @override
+  String loggedInAs(String username) {
+    return 'Music: $username';
+  }
+
+  @override
+  String get nowPlayingTab => 'NowPlaying';
+
+  @override
+  String get libraryTab => 'Library';
+
+  @override
+  String get roamTab => 'Roam';
+
+  @override
+  String get loginSuccess => 'Logged in with Music';
+
+  @override
+  String get recordsTab => 'RECORDS';
+
+  @override
+  String get queueTab => 'QUEUE';
+
+  @override
+  String get lyricsTab => 'LYRICS';
+
+  @override
+  String get devicesPageTitle => 'Devices';
+
+  @override
+  String get noDevicesFound => 'No devices found';
+
+  @override
+  String get sonosDeviceRestriction =>
+      'Please control this device using Music or Sonos app';
+
+  @override
+  String get deviceRestricted => 'This device is not available';
+
+  @override
+  String get privateSession => 'Private Session';
+
+  @override
+  String get currentDevice => 'Current';
+
+  @override
+  String get editNote => 'Edit Note';
+
+  @override
+  String get deleteNote => 'Delete Note';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get confirmDelete => 'Confirm Delete';
+
+  @override
+  String get deleteConfirmMessage =>
+      'Are you sure you want to delete this note? This action cannot be undone.';
+
+  @override
+  String get noNotes => 'No notes added yet.';
+
+  @override
+  String recordsAt(String time) {
+    return 'Records at $time';
+  }
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String playbackFailed(String error) {
+    return 'Playback failed: $error';
+  }
+
+  @override
+  String get searchHint => 'Search songs, albums, artists...';
+
+  @override
+  String get clearSearch => 'Clear search';
+
+  @override
+  String get playToGenerateInsights => 'Play some music to generate insights!';
+
+  @override
+  String get generateInsights => 'Insights';
+
+  @override
+  String get generating => 'Generating...';
+
+  @override
+  String get collapse => 'Collapse';
+
+  @override
+  String get expand => 'Expand';
+
+  @override
+  String get noInsightsGenerated =>
+      'Could not generate insights from the provided history.';
+
+  @override
+  String get insightsTitle => 'Insights';
+
+  @override
+  String get inspirationsTitle => 'Inspirations';
+
+  @override
+  String get unknownArtist => 'Unknown Artist';
+
+  @override
+  String get unknownTrack => 'Unknown Track';
+
+  @override
+  String failedToGenerateInsights(String error) {
+    return 'Failed to generate insights: $error';
+  }
+
+  @override
+  String copiedToClipboard(String type) {
+    return 'Copied to clipboard';
+  }
+
+  @override
+  String get musicPersonality => 'Music Personality';
+
+  @override
+  String get insightsContent => 'Insights Content';
+
+  @override
+  String get recommendedSong => 'Recommended Song';
+
+  @override
+  String get addNote => 'Add Note';
+
+  @override
+  String get noteHint => 'Enter your note here';
+
+  @override
+  String get saveNote => 'Save Note';
+
+  @override
+  String get noteSaved => 'Note saved';
+
+  @override
+  String errorSavingNote(String error) {
+    return 'Error saving note: $error';
+  }
+
+  @override
+  String get notesTitle => 'Notes';
+
+  @override
+  String get areYouSureDeleteNote =>
+      'Are you sure you want to delete this note?';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get noteDeleted => 'Note deleted';
+
+  @override
+  String errorDeletingNote(String error) {
+    return 'Error deleting note: $error';
+  }
+
+  @override
+  String get noteUpdated => 'Note updated successfully';
+
+  @override
+  String errorUpdatingNote(String error) {
+    return 'Error updating note: $error';
+  }
+
+  @override
+  String get lyricsFetching => 'Fetching lyrics...';
+
+  @override
+  String get lyricsFound => 'Lyrics found.';
+
+  @override
+  String get lyricsNotFoundForTrack => 'No lyrics found for this track.';
+
+  @override
+  String lyricsFetchError(String error) {
+    return 'Error fetching lyrics: $error';
+  }
+
+  @override
+  String get lyricsTranslating => 'Translating lyrics...';
+
+  @override
+  String get lyricsTranslationSuccessful => 'Translation successful.';
+
+  @override
+  String lyricsTranslationError(String error) {
+    return 'Error translating lyrics: $error';
+  }
+
+  @override
+  String get lyricsTitle => 'Lyrics';
+
+  @override
+  String get lyricsCopyModeTooltip => 'Copy Lyrics Mode';
+
+  @override
+  String get lyricsTranslateTooltip => 'Translate Lyrics';
+
+  @override
+  String get lyricsToggleAutoScrollTooltip => 'Toggle Auto-Scroll';
+
+  @override
+  String get lyricsNotAvailable => 'No lyrics available.';
+
+  @override
+  String get lyricsLoading => 'Loading lyrics...';
+
+  @override
+  String get lyricsFailedToLoad => 'Failed to load lyrics.';
+
+  @override
+  String get lyricsCopyModeSnackbar =>
+      'Copy Lyrics Mode: Single repeat active, auto-scroll disabled.';
+
+  @override
+  String get couldNotGetCurrentTrackId => 'Could not get current track ID.';
+
+  @override
+  String translationFailed(Object error) {
+    return 'Translation failed: $error';
+  }
+
+  @override
+  String get centerCurrentLine => 'Center Current Line';
+
+  @override
+  String get translateLyrics => 'Translate Lyrics';
+
+  @override
+  String get exitCopyModeResumeScroll => 'Exit Copy Mode & Resume Scroll';
+
+  @override
+  String get enterCopyLyricsMode => 'Enter Copy Lyrics Mode (Single Repeat)';
+
+  @override
+  String get translationTitle => 'Translation';
+
+  @override
+  String get originalTitle => 'Original';
+
+  @override
+  String translatedByAttribution(String version) {
+    return 'Translated by Gemini $version';
+  }
+
+  @override
+  String spiritLabel(String style) {
+    return 'Spirit: $style';
+  }
+
+  @override
+  String get copyToClipboard => 'Copy to Clipboard';
+
+  @override
+  String get retranslateButton => 'Retranslate';
+
+  @override
+  String get retranslating => 'Retranslating...';
+
+  @override
+  String get translationStyleFaithful => 'Faithful';
+
+  @override
+  String get translationStyleMelodramaticPoet => 'Melodramatic Poet';
+
+  @override
+  String get translationStyleMachineClassic => 'Machine Classic';
+
+  @override
+  String get translationStyleTooltipFaithful =>
+      'Current: Faithful Translation - Tap to change';
+
+  @override
+  String get translationStyleTooltipMelodramatic =>
+      'Current: Melodramatic Poet Translation - Tap to change';
+
+  @override
+  String get translationStyleTooltipMachine =>
+      'Current: Machine Translation - Tap to change';
+
+  @override
+  String get toggleTranslationStyle => 'Toggle Translation Style';
+
+  @override
+  String get showTranslation => 'Show Translation';
+
+  @override
+  String get showOriginal => 'Show Original';
+
+  @override
+  String get closeTranslation => 'Close';
+
+  @override
+  String get trackSaved => 'Track saved to playlist';
+
+  @override
+  String errorSavingTrack(String error) {
+    return 'Error saving track: $error';
+  }
+
+  @override
+  String get unknownAlbum => 'Unknown Album';
+
+  @override
+  String get playlist => 'Playlist';
+
+  @override
+  String get unknownContext => 'Unknown Context';
+
+  @override
+  String get noTrackOrEmptyNote => 'Cannot get track info or note is empty';
+
+  @override
+  String get logoutSuccess => 'Logged out from Music';
+
+  @override
+  String get operationFailed => 'Operation failed';
+
+  @override
+  String get invalidCredentialsError => '音乐源配置无效，请检查服务器地址、账号、密码或 API Key。';
+
+  @override
+  String get authenticationError =>
+      'Authentication failed: Invalid credentials or insufficient permissions.';
+
+  @override
+  String get tooManyRequestsError =>
+      'Too many requests. Please try again later.';
+
+  @override
+  String loginLogoutFailed(Object error) {
+    return 'Login/Logout failed: $error';
+  }
+
+  @override
+  String get helpAction => 'Help';
+
+  @override
+  String get setupTitle => 'Setup';
+
+  @override
+  String get googleAiApiKeyTitle => 'Google AI API key';
+
+  @override
+  String get googleAiApiKeySubtitle =>
+      'Set up your Google AI Studio API key for Gemini translation';
+
+  @override
+  String get spotifyApiTitle => '音乐源';
+
+  @override
+  String get spotifyApiSubtitle => 'Set Music Client ID and Secret';
+
+  @override
+  String get tutorialTitle => 'Tutorial';
+
+  @override
+  String get tutorialSubtitle => 'See tutorial for setting up';
+
+  @override
+  String get generalTitle => 'General';
+
+  @override
+  String get translationLanguageTitle => 'Gemini\'s Language';
+
+  @override
+  String get translationLanguageSubtitle =>
+      'Choose the target language for translations and insights';
+
+  @override
+  String get translationStyleTitle => 'Translation Style';
+
+  @override
+  String get translationStyleSubtitle => 'Set Gemini\'s Spirit';
+
+  @override
+  String get autoTranslateLyricsTitle => 'Auto-translate lyrics';
+
+  @override
+  String get autoTranslateLyricsSubtitle =>
+      'Translate lyrics automatically when translations are missing';
+
+  @override
+  String get copyLyricsAsSingleLineTitle => 'Copy lyrics as single line';
+
+  @override
+  String get copyLyricsAsSingleLineSubtitle =>
+      'Replaces line breaks with spaces when copying';
+
+  @override
+  String get enableGemini3Title => 'Enable Gemini 3';
+
+  @override
+  String get enableGemini3Subtitle =>
+      'Use Gemini 3 for more stable structure, but tested translation quality is similar';
+
+  @override
+  String get dataManagementTitle => 'Data Management';
+
+  @override
+  String get exportDataTitle => 'Export Data';
+
+  @override
+  String get exportDataSubtitle => 'Export all data as JSON file';
+
+  @override
+  String get importDataTitle => 'Import Data';
+
+  @override
+  String get importDataSubtitle => 'Import data from exported JSON file';
+
+  @override
+  String get clearCacheTitle => 'Clear All Cache';
+
+  @override
+  String get clearCacheSubtitle => 'Clear lyrics and translation cache';
+
+  @override
+  String get geminiApiKeyDialogTitle => 'Gemini API key';
+
+  @override
+  String get geminiApiKeyDialogHint => 'Enter your Gemini API key';
+
+  @override
+  String get cancelButton => 'Cancel';
+
+  @override
+  String get apiKeySaved => 'Gemini API key saved';
+
+  @override
+  String get okButton => 'OK';
+
+  @override
+  String get spotifyCredentialsDialogTitle => '音乐源';
+
+  @override
+  String get clientIdLabel => 'Client ID';
+
+  @override
+  String get emptyCredentialsError => 'Client ID is required.';
+
+  @override
+  String get invalidClientIdError =>
+      'Client ID must be a 32-character hex string.';
+
+  @override
+  String get credentialsSaved => 'Music credentials saved';
+
+  @override
+  String get credentialsSaveFailed => 'Failed to save credentials';
+
+  @override
+  String get languageDialogTitle => 'Select Language';
+
+  @override
+  String get languageSaved => 'Language setting saved';
+
+  @override
+  String get translationStyleDialogTitle => 'Select Translation Style';
+
+  @override
+  String get translationStyleSaved => 'Translation style saved';
+
+  @override
+  String get exportFailed => 'Export failed or cancelled.';
+
+  @override
+  String get importDialogTitle => 'Confirm Import';
+
+  @override
+  String get importDialogMessage =>
+      'Importing data will replace existing tracks and translations with the same identifiers, and add all records from the file. This cannot be undone. Are you sure you want to continue?\n\nEnsure the JSON file is valid and was previously exported from Music.';
+
+  @override
+  String get importButton => 'Import Data';
+
+  @override
+  String get importSuccess => 'Data imported successfully!';
+
+  @override
+  String get importFailed => 'Failed to import data.';
+
+  @override
+  String get exportSuccess => 'Data exported successfully!';
+
+  @override
+  String get clearCacheDialogTitle => 'Confirm Clear Cache';
+
+  @override
+  String get clearCacheDialogMessage =>
+      'Are you sure you want to clear the lyrics and translation cache? This cannot be undone.';
+
+  @override
+  String get clearCacheButton => 'Clear Cache';
+
+  @override
+  String get clearingCache => 'Clearing cache...';
+
+  @override
+  String get cacheCleared => 'Cache cleared successfully!';
+
+  @override
+  String get cacheClearFailed => 'Failed to clear cache';
+
+  @override
+  String failedToChangeLanguage(String error) {
+    return 'Failed to change language: $error';
+  }
+
+  @override
+  String failedToChangeStyle(String error) {
+    return 'Failed to change translation style: $error';
+  }
+
+  @override
+  String get noteContent => 'Note Content';
+
+  @override
+  String get saveChanges => 'Save';
+
+  @override
+  String get noLyricsToTranslate => 'No lyrics to translate.';
+
+  @override
+  String failedToSaveTranslation(Object error) {
+    return 'Failed to save fetched translation: $error';
+  }
+
+  @override
+  String get failedToGetTranslation => 'Failed to get translation.';
+
+  @override
+  String get copyLyricsModeHint =>
+      'Copy Lyrics Mode: Single repeat active, auto-scroll disabled.';
+
+  @override
+  String get exitCopyMode => 'Exit Copy Mode & Resume Scroll';
+
+  @override
+  String get enterCopyMode => 'Enter Copy Lyrics Mode (Single Repeat)';
+
+  @override
+  String get selectLyrics => 'Select Lyrics';
+
+  @override
+  String get selectLyricsTooltip =>
+      'Select lyrics fragments for analysis or sharing';
+
+  @override
+  String get selectAll => 'Select All';
+
+  @override
+  String get deselectAll => 'Deselect All';
+
+  @override
+  String get noLyricsSelected => 'Please select some lyrics first';
+
+  @override
+  String get askGemini => 'Ask Gemini';
+
+  @override
+  String get sharePoster => 'Share Poster';
+
+  @override
+  String get shareNote => 'Share Note';
+
+  @override
+  String get copySelected => 'Copy Selected';
+
+  @override
+  String get geminiAnalysisResult => 'Gemini Analysis Result';
+
+  @override
+  String get lyricsTheme => 'Theme';
+
+  @override
+  String get lyricsEmotion => 'Emotion';
+
+  @override
+  String get lyricsMetaphor => 'Metaphor and Symbolism';
+
+  @override
+  String get lyricsInterpretation => 'In-depth Interpretation';
+
+  @override
+  String get lyricsReference => 'References and Allusions';
+
+  @override
+  String get lyricsKeywordsExplanation => 'Keywords Explanation';
+
+  @override
+  String get copyAnalysis => 'Copy Analysis';
+
+  @override
+  String get analysisResultCopied => 'Analysis result copied to clipboard';
+
+  @override
+  String selectedLyricsCopied(int count) {
+    return 'Copied $count lines of lyrics';
+  }
+
+  @override
+  String posterGenerationFailed(Object error) {
+    return 'Poster generation failed: $error';
+  }
+
+  @override
+  String analysisFailed(String error) {
+    return 'Analysis failed: $error';
+  }
+
+  @override
+  String get noLyricsToSelect => 'No lyrics available to select';
+
+  @override
+  String get posterLyricsLimitExceeded =>
+      'Maximum 10 lines of lyrics can be selected for poster generation';
+
+  @override
+  String get multiSelectMode => 'Multi-select Mode';
+
+  @override
+  String get tapToSelectLyrics => 'Tap lyric line to select';
+
+  @override
+  String get appTitle => 'Music';
+
+  @override
+  String get nowPlayingLabel => 'NowPlaying';
+
+  @override
+  String get libraryLabel => 'Library';
+
+  @override
+  String get roamLabel => 'Roam';
+
+  @override
+  String get tutorialButtonText => 'Tutorial';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageSimplifiedChinese => '简体中文 (Simplified Chinese)';
+
+  @override
+  String get languageTraditionalChinese => '繁體中文 (Traditional Chinese)';
+
+  @override
+  String get collapseTooltip => 'Collapse';
+
+  @override
+  String get expandTooltip => 'Expand';
+
+  @override
+  String get incompleteRecordError =>
+      'Cannot proceed: Incomplete record information';
+
+  @override
+  String get optionsTitle => 'Options';
+
+  @override
+  String playFromTimestamp(String timestamp) {
+    return 'Play from $timestamp';
+  }
+
+  @override
+  String get editNoteTitle => 'Edit Note';
+
+  @override
+  String get ratedStatus => 'Rated';
+
+  @override
+  String get noItemsFound => 'No items found';
+
+  @override
+  String get cannotCreateSpotifyLink => 'Cannot create Music link';
+
+  @override
+  String get cannotOpenSpotify => 'Cannot open Music';
+
+  @override
+  String failedToOpenSpotify(String error) {
+    return 'Failed to open Music: $error';
+  }
+
+  @override
+  String get playlistsTab => 'Playlists';
+
+  @override
+  String get albumsTab => 'Albums';
+
+  @override
+  String get tryAgainButton => 'Try Again';
+
+  @override
+  String get playTrackToSeeThoughts => 'Play a track to see thoughts.';
+
+  @override
+  String get copyButtonText => 'Copy';
+
+  @override
+  String get posterButtonLabel => 'Poster';
+
+  @override
+  String get noteButtonLabel => 'Note';
+
+  @override
+  String get lyricsAnalysisTitle => 'Lyrics Analysis';
+
+  @override
+  String get regenerateAnalysisTooltip => 'Regenerate Analysis';
+
+  @override
+  String get copyAllAnalysisTooltip => 'Copy All Analysis';
+
+  @override
+  String get geminiGrounding => 'Gemini\'s grounding...';
+
+  @override
+  String get retryButton => 'Retry';
+
+  @override
+  String get noAnalysisResults => 'No analysis results';
+
+  @override
+  String get noDeepAnalysisContent =>
+      'No deep analysis content for this lyric fragment';
+
+  @override
+  String get simpleContentExplanation =>
+      'This may be because the lyrics are relatively simple, or have no obvious metaphors, references, or literary devices';
+
+  @override
+  String get reanalyzeButton => 'Re-analyze';
+
+  @override
+  String get onlyFoundDimensionsInfo =>
+      'Only displays analysis dimensions found in these lyrics';
+
+  @override
+  String get songInfoRegeneratedMessage => 'Song information regenerated';
+
+  @override
+  String get songInformationTitle => 'INFORMATION';
+
+  @override
+  String get regenerateTooltip => 'Regenerate';
+
+  @override
+  String get noSongInfoAvailable => 'No song information available';
+
+  @override
+  String get generateAIContent =>
+      'Generate AI song analysis and background info';
+
+  @override
+  String get generatingAIContent => 'Generating...';
+
+  @override
+  String get deleteAIContent => 'Delete AI analysis content';
+
+  @override
+  String generatedByGemini(String version) {
+    return 'Generated by Gemini $version';
+  }
+
+  @override
+  String get poweredByGoogleSearch => 'Powered by Google Search Grounding';
+
+  @override
+  String get creationTimeTitle => 'Creation Time';
+
+  @override
+  String get creationLocationTitle => 'Creation Location';
+
+  @override
+  String get lyricistTitle => 'Lyricist';
+
+  @override
+  String get composerTitle => 'Composer';
+
+  @override
+  String get producerTitle => 'Producer';
+
+  @override
+  String get songAnalysisTitle => 'Song Analysis';
+
+  @override
+  String get selectArtistTitle => 'Select Artist';
+
+  @override
+  String get backToLibraryTooltip => 'Back to library';
+
+  @override
+  String get appWatermark => 'Music';
+
+  @override
+  String get loadingAnalyzing => 'Analyzing lyrics with AI...';
+
+  @override
+  String get loadingDecoding => 'Decoding musical mysteries...';
+
+  @override
+  String get loadingSearching => 'Searching for insights...';
+
+  @override
+  String get loadingThinking => 'Gemini is thinking...';
+
+  @override
+  String get loadingGenerating => 'Generating analysis...';
+
+  @override
+  String loadingChatting(String artist) {
+    return 'Having a chat with $artist...';
+  }
+
+  @override
+  String get loadingDiscovering => 'Discovering hidden meanings...';
+
+  @override
+  String get loadingExploring => 'Exploring lyrical depths...';
+
+  @override
+  String get loadingUnraveling => 'Unraveling poetic layers...';
+
+  @override
+  String get loadingConnecting => 'Connecting emotional threads...';
+
+  @override
+  String get currentQueueEmpty => 'Current queue is empty';
+
+  @override
+  String get queueUpNext => 'Up Next';
+
+  @override
+  String get noQueueItems => 'No upcoming tracks';
+
+  @override
+  String queuePositionInfo(int position, int total) {
+    return 'Track $position of $total';
+  }
+
+  @override
+  String failedToSwitchDevice(String error) {
+    return 'Failed to switch device: $error';
+  }
+
+  @override
+  String deviceRestrictedMessage(String device) {
+    return 'Device \'$device\' is restricted and cannot be controlled via API.';
+  }
+
+  @override
+  String get insufficientPermissionsReauth =>
+      'Insufficient permissions, reauthorizing...';
+
+  @override
+  String get reauthFailedManualLogin =>
+      'Reauthorization failed, please login manually';
+
+  @override
+  String badRequestError(String code) {
+    return 'Bad request ($code), please try again later or contact developer.';
+  }
+
+  @override
+  String get searchLyrics => 'Search Lyrics';
+
+  @override
+  String get noCurrentTrackPlaying => 'No track currently playing';
+
+  @override
+  String get cannotGetTrackInfo => 'Cannot get current track information';
+
+  @override
+  String get lyricsSearchAppliedSuccess =>
+      'Lyrics successfully searched and applied';
+
+  @override
+  String get thoughts => 'THOUGHTS';
+
+  @override
+  String get noTrack => 'NO TRACK';
+
+  @override
+  String get noIdeasYet =>
+      'No ideas for this song yet.\nCome share the first idea!';
+
+  @override
+  String get relatedThoughts => 'Related Thoughts';
+
+  @override
+  String get yourLibrary => 'YOUR LIBRARY';
+
+  @override
+  String get errorLoadingLibrary => 'Error loading library';
+
+  @override
+  String get searchResults => 'SEARCH RESULTS';
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
+  String get tryDifferentKeywords =>
+      'Try different keywords or check your spelling';
+
+  @override
+  String get infoLabel => 'Info';
+
+  @override
+  String get playlistType => 'Playlist';
+
+  @override
+  String get albumType => 'Album';
+
+  @override
+  String get songType => 'Song';
+
+  @override
+  String get artistType => 'Artist';
+
+  @override
+  String get daysAgo => 'Days Ago';
+
+  @override
+  String get hoursAgo => 'Hours Ago';
+
+  @override
+  String get minsAgo => 'Mins Ago';
+
+  @override
+  String get secsAgo => 'Secs Ago';
+
+  @override
+  String failedToPlayAlbum(String error) {
+    return 'Failed to play album: $error';
+  }
+
+  @override
+  String get rateAtLeastOneSongForPoster =>
+      'Rate at least one song before generating poster';
+
+  @override
+  String failedToSharePoster(String error) {
+    return 'Failed to share rating poster: $error';
+  }
+
+  @override
+  String get cannotPlayMissingTrackLink => 'Cannot play: missing track link';
+
+  @override
+  String failedToPlaySong(String error) {
+    return 'Failed to play song: $error';
+  }
+
+  @override
+  String failedToSaveRating(String error) {
+    return 'Failed to save rating: $error';
+  }
+
+  @override
+  String get albumDetails => 'Album Details';
+
+  @override
+  String get titleCopied => 'Title copied';
+
+  @override
+  String get playAlbum => 'Play';
+
+  @override
+  String get rateAtLeastOneSongFirst =>
+      'Rate a few songs before sharing poster';
+
+  @override
+  String get shareAlbumRatingPoster => 'Share album rating poster';
+
+  @override
+  String get hideQuickRating => 'Hide quick rating';
+
+  @override
+  String get showQuickRating => 'Show quick rating';
+
+  @override
+  String get currently => 'Currently';
+
+  @override
+  String get savingChanges => 'Saving...';
+
+  @override
+  String get saveAllChanges => 'Save All Changes';
+
+  @override
+  String get generatingTooltip => 'Generating...';
+
+  @override
+  String get generateAlbumInsights => 'Generate Album Insights';
+
+  @override
+  String get collapseInsights => 'Collapse insights';
+
+  @override
+  String get expandInsights => 'Expand insights';
+
+  @override
+  String get noSongsRatedYet => 'No songs rated yet';
+
+  @override
+  String basedOnRatedSongs(int rated, int total) {
+    return 'Based on $rated/$total songs';
+  }
+
+  @override
+  String failedToGenerateAlbumInsights(String error) {
+    return 'Failed to generate insights: $error';
+  }
+
+  @override
+  String failedToLoadCache(String error) {
+    return 'Failed to load cache: $error';
+  }
+
+  @override
+  String get generatingAlbumInsights => 'Generating album insights...';
+
+  @override
+  String get noInsightsAvailableTapToGenerate =>
+      'No insights available. Tap the button above to generate.';
+
+  @override
+  String get insightsEmptyRetryGenerate =>
+      'Insights are empty, try regenerating.';
+
+  @override
+  String insightsGeneratedDaysAgo(int days) {
+    return 'Insights generated $days days ago';
+  }
+
+  @override
+  String insightsGeneratedHoursAgo(int hours) {
+    return 'Insights generated $hours hours ago';
+  }
+
+  @override
+  String insightsGeneratedMinutesAgo(int minutes) {
+    return 'Insights generated $minutes minutes ago';
+  }
+
+  @override
+  String get insightsJustGenerated => 'Insights just generated';
+
+  @override
+  String get refreshAlbum => 'Refresh album';
+
+  @override
+  String get failedToLoadAlbum => 'Failed to load album';
+
+  @override
+  String get unknownError => 'Unknown error';
+
+  @override
+  String get unratedStatus => 'Not rated';
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String minutesAgoShort(int minutes) {
+    return '${minutes}m ago';
+  }
+
+  @override
+  String hoursAgoShort(int hours) {
+    return '${hours}h ago';
+  }
+
+  @override
+  String daysAgoShort(int days) {
+    return '${days}d ago';
+  }
+
+  @override
+  String totalTracksCount(int count) {
+    return '$count tracks total';
+  }
+
+  @override
+  String failedToPlayPlaylist(String error) {
+    return 'Failed to play playlist: $error';
+  }
+
+  @override
+  String get playPlaylist => 'Play Playlist';
+
+  @override
+  String get playlistDetails => 'Playlist Details';
+
+  @override
+  String get refreshPlaylist => 'Refresh playlist';
+
+  @override
+  String createdBy(String owner) {
+    return 'Created by $owner';
+  }
+
+  @override
+  String playlistTrackCount(int count) {
+    return '$count tracks total';
+  }
+
+  @override
+  String get failedToLoadPlaylist => 'Failed to load playlist';
+
+  @override
+  String get playlistTracksLabel => 'Playlist tracks';
+
+  @override
+  String get deviceOperationNotSupported =>
+      'This device does not support this operation or is restricted. Please try playing music on other devices, or check your account type.';
+
+  @override
+  String shareAlbumMessage(
+      String albumName, String artist, String score, int rated, int total) {
+    return 'I rated $albumName by $artist $score on Music, rated $rated/$total songs.';
+  }
+
+  @override
+  String get noRating => 'No rating';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get unknownTrackName => 'Unknown Track';
+
+  @override
+  String get albumInsightReadyStatus => 'Album insights ready';
+
+  @override
+  String get clickToGenerateAlbumInsights =>
+      'Click the button on the right to generate insights for this album';
+
+  @override
+  String get failedToGenerateAlbumInsightsStatus =>
+      'Failed to generate album insights';
+
+  @override
+  String get providerQQMusic => 'QQ Music';
+
+  @override
+  String get providerLRCLIB => 'LRCLIB';
+
+  @override
+  String get providerNetease => 'NetEase Cloud Music';
+
+  @override
+  String get playingFrom => 'PLAYING FROM';
+
+  @override
+  String get playFromAlbum => 'PLAY FROM ALBUM';
+
+  @override
+  String get playFromPlaylist => 'PLAY FROM PLAYLIST';
+
+  @override
+  String get sharingStatus => 'Sharing...';
+
+  @override
+  String get shareButton => 'Share';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterFire => 'Fire';
+
+  @override
+  String get filterNeutral => 'Neutral';
+
+  @override
+  String get filterDown => 'Down';
+
+  @override
+  String get filterRated => 'Rated';
+
+  @override
+  String statsTotal(int count) {
+    return '$count notes';
+  }
+
+  @override
+  String get searchNotesHint => 'Search notes...';
+
+  @override
+  String get swipeToDelete => 'Delete';
+
+  @override
+  String get swipeToPlay => 'Play';
+
+  @override
+  String get emptyNotesTitle => 'No notes yet';
+
+  @override
+  String get emptyNotesSubtitle =>
+      'Start playing music and add your first note on the Now Playing page';
+
+  @override
+  String get todayReviewTitle => 'Revisit';
+
+  @override
+  String get undoAction => 'Undo';
+
+  @override
+  String get askMoreAboutTrack => 'Ask more about this track';
+
+  @override
+  String get askFollowUpHint => 'Ask anything about this song...';
+
+  @override
+  String get askFollowUpSend => 'Send';
+
+  @override
+  String get followUpThinking => 'Thinking...';
+
+  @override
+  String followUpError(String error) {
+    return 'Failed to get answer: $error';
+  }
+
+  @override
+  String get authFailureExceeded =>
+      'Authorization failed too many times. Please check your Music Client ID configuration.';
+
+  @override
+  String get timeMachineTitle => 'Time Machine';
+
+  @override
+  String get timeMachineDateRange => 'Select Date Range';
+
+  @override
+  String get timeMachineToday => 'Today\'s Memories';
+
+  @override
+  String get timeMachineEmpty => 'No memories found';
+
+  @override
+  String get timeMachineEmptyHint =>
+      'Try selecting a different date range to explore your music history';
+
+  @override
+  String yearsAgoToday(int years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years years ago today',
+      one: '1 year ago today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String andMoreTracks(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String addedYearsAgo(int years, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: 'Added $years years ago',
+      one: 'Added 1 year ago',
+    );
+    return '$_temp0 ($date)';
+  }
+
+  @override
+  String get ratingLabel => 'Rating';
+
+  @override
+  String get lyricsSnapshotLabel => 'Lyrics Snapshot';
+
+  @override
+  String get addNoteHint => 'Add a note...';
+
+  @override
+  String get changesSaved => 'Changes saved';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get randomReviewTitle => 'Random Review';
+
+  @override
+  String get thisDayInHistory => 'This Day in History';
+
+  @override
+  String get translationAvailable => 'Translation Available';
+
+  @override
+  String get useNeteaseTranslation =>
+      'This song has a NetEase Cloud Music translation. Would you like to include it?';
+
+  @override
+  String get originalOnly => 'Original Only';
+
+  @override
+  String get useTranslation => 'Include Translation';
+
+  @override
+  String get translationStyleNetease => 'NetEase Cloud';
+
+  @override
+  String get neteaseTranslationChineseOnly => 'Chinese only';
+
+  @override
+  String get neteaseTranslationUnavailable => 'Not available for this track';
+
+  @override
+  String get neteaseTranslationSaved => 'NetEase translation saved';
+
+  @override
+  String get pressAgainToExit => 'Press again to exit';
+}

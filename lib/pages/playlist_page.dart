@@ -1,0 +1,958 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/local_database_provider.dart';
+import '../providers/spotify_provider.dart';
+import '../services/spotify_service.dart';
+import '../utils/responsive.dart';
+import '../widgets/materialui.dart';
+import '../widgets/time_machine_carousel.dart'; // For AlbumColorExtractor
+
+class PlaylistPage extends StatefulWidget {
+  final String playlistId;
+
+  const PlaylistPage({super.key, required this.playlistId});
+
+  @override
+  State<PlaylistPage> createState() => _PlaylistPageState();
+}
+
+class _PlaylistPageState extends State<PlaylistPage> {
+  Map<String, dynamic>? _playlistData;
+  List<Map<String, dynamic>> _tracks = [];
+  Map<String, int?> _trackRatings = {};
+  Map<String, int?> _trackRatingTimestamps = {};
+  final Map<String, int> _pendingTrackRatings = {};
+  final Set<String> _updatingTracks = {};
+  bool _isLoading = true;
+  bool _showQuickSelectors = false;
+  bool _isSavingPendingRatings = false;
+  String? _errorMessage;
+
+  // Dynamic color from playlist cover
+  ColorScheme? _playlistColorScheme;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPlaylist();
+  }
+
+  Future<void> _loadPlaylist({bool forceRefresh = false}) async {
+    if (!forceRefresh) {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+    } else {
+      setState(() {
+        _errorMessage = null;
+      });
+    }
+
+    try {
+      final spotify = context.read<SpotifyProvider>();
+      final localDb = context.read<LocalDatabaseProvider>();
+      final playlist = await spotify.fetchPlaylistDetails(
+        widget.playlistId,
+        forceRefresh: forceRefresh,
+      );
+
+      final trackSection =
+          (playlist['tracks'] as Map<String, dynamic>? ?? const {});
+      final items = trackSection['items'] as List? ?? const [];
+      final tracks = <Map<String, dynamic>>[
+        for (final item in items)
+          if (item is Map<String, dynamic>) Map<String, dynamic>.from(item)
+      ];
+
+      final trackIds = tracks
+          .map((track) => track['id'])
+          .whereType<String>()
+          .toList(growable: false);
+
+      final latestRatingsWithTimestamp =
+          await localDb.getLatestRatingsWithTimestampForTracks(trackIds);
+      final normalizedRatings = <String, int?>{};
+      final normalizedTimestamps = <String, int?>{};
+
+      for (final id in trackIds) {
+        final ratingData = latestRatingsWithTimestamp[id];
+        normalizedRatings[id] = ratingData?['rating'] as int?;
+        normalizedTimestamps[id] = ratingData?['recordedAt'] as int?;
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _playlistData = playlist;
+        _tracks = tracks;
+        _trackRatings = normalizedRatings;
+        _trackRatingTimestamps = normalizedTimestamps;
+        _isLoading = false;
+        _pendingTrackRatings.clear();
+        _updatingTracks.clear();
+        _showQuickSelectors = false;
+      });
+      _extractPlaylistColors();
+    } catch (e) {
+      if (!mounted) return;
+      final message = e is SpotifyAuthException ? e.message : e.toString();
+      setState(() {
+        _errorMessage = message;
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _extractPlaylistColors() async {
+    final coverUrl = _extractCoverUrl();
+    if (coverUrl == null) return;
+
+    final brightness = Theme.of(context).brightness;
+    final colorScheme =
+        await AlbumColorExtractor.extractFromUrl(coverUrl, brightness);
+
+    if (mounted && colorScheme != null) {
+      setState(() {
+        _playlistColorScheme = colorScheme;
+      });
+    }
+  }
+
+  Future<void> _handlePlayPlaylist() async {
+    final playlistId = (_playlistData?['id'] as String?) ?? widget.playlistId;
+    try {
+      final spotify = context.read<SpotifyProvider>();
+      await spotify.playContext(type: 'playlist', id: playlistId);
+    } catch (e) {
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.failedToPlayPlaylist(e.toString()))),
+      );
+    }
+  }
+
+  Future<void> _handlePlayTrack(
+      Map<String, dynamic> track, int trackIndex) async {
+    final trackUri = track['uri'] as String? ??
+        (track['id'] is String ? 'local:track:${track['id']}' : null);
+    final playlistUri = (_playlistData?['uri'] as String?) ?? '';
+    final playlistId = (_playlistData?['id'] as String?) ?? widget.playlistId;
+    final derivedContextUri = playlistUri.isNotEmpty
+        ? playlistUri
+        : (playlistId.isNotEmpty ? 'local:playlist:$playlistId' : null);
+
+    if (trackUri == null) {
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.cannotPlayMissingTrackLink)),
+      );
+      return;
+    }
+
+    try {
+      final spotify = context.read<SpotifyProvider>();
+      if (derivedContextUri != null) {
+        await spotify.playTrackInContext(
+          contextUri: derivedContextUri,
+          trackUri: trackUri,
+          offsetIndex: trackIndex,
+        );
+      } else {
+        await spotify.playTrack(trackUri: trackUri);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.failedToPlaySong(e.toString()))),
+      );
+    }
+  }
+
+  Future<void> _handleQuickRating(
+    Map<String, dynamic> track,
+    int rating,
+  ) async {
+    final trackId = track['id'] as String?;
+    if (trackId == null || _updatingTracks.contains(trackId)) {
+      return;
+    }
+
+    final playlistName = _playlistData?['name'] as String? ?? '';
+    final trackAlbum = track['album'];
+    var albumName = playlistName;
+    String? albumCoverUrl;
+    if (trackAlbum is Map<String, dynamic>) {
+      final candidateName = trackAlbum['name'] as String?;
+      if (candidateName != null && candidateName.isNotEmpty) {
+        albumName = candidateName;
+      }
+      final albumImages = trackAlbum['images'];
+      if (albumImages is List && albumImages.isNotEmpty) {
+        final first = albumImages.first;
+        if (first is Map<String, dynamic>) {
+          albumCoverUrl = first['url'] as String?;
+        }
+      }
+    }
+    final l10n = AppLocalizations.of(context)!;
+    albumName = albumName.isEmpty ? l10n.playlistTracksLabel : albumName;
+    albumCoverUrl ??= _extractCoverUrl();
+
+    final artistNames = _formatArtists(track['artists']);
+    final trackName = track['name'] as String? ?? '';
+
+    setState(() {
+      _updatingTracks.add(trackId);
+    });
+
+    try {
+      final localDb = context.read<LocalDatabaseProvider>();
+      await localDb.quickRateTrack(
+        trackId: trackId,
+        trackName: trackName,
+        artistName: artistNames,
+        albumName: albumName,
+        albumCoverUrl: albumCoverUrl,
+        rating: rating,
+      );
+
+      if (!mounted) return;
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      setState(() {
+        _trackRatings = Map<String, int?>.from(_trackRatings)
+          ..[trackId] = rating;
+        _trackRatingTimestamps = Map<String, int?>.from(
+          _trackRatingTimestamps,
+        )..[trackId] = timestamp;
+        _pendingTrackRatings.remove(trackId);
+      });
+    } catch (e) {
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.failedToSaveRating(e.toString()))),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _updatingTracks.remove(trackId);
+        });
+      }
+    }
+  }
+
+  void _handleRatingDraftChange(String trackId, int rating) {
+    if (_trackRatings[trackId] == rating) {
+      setState(() {
+        _pendingTrackRatings.remove(trackId);
+      });
+    } else {
+      setState(() {
+        _pendingTrackRatings[trackId] = rating;
+      });
+    }
+  }
+
+  Map<String, dynamic>? _findTrackById(String trackId) {
+    for (final track in _tracks) {
+      if (track['id'] == trackId) {
+        return track;
+      }
+    }
+    return null;
+  }
+
+  Future<void> _savePendingRatings() async {
+    if (_pendingTrackRatings.isEmpty || _isSavingPendingRatings) {
+      return;
+    }
+
+    setState(() {
+      _isSavingPendingRatings = true;
+    });
+
+    try {
+      final entries = List<MapEntry<String, int>>.from(
+        _pendingTrackRatings.entries,
+      );
+
+      for (final entry in entries) {
+        final track = _findTrackById(entry.key);
+        if (track == null) {
+          _pendingTrackRatings.remove(entry.key);
+          continue;
+        }
+        await _handleQuickRating(track, entry.value);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSavingPendingRatings = false;
+          _pendingTrackRatings.clear();
+          _showQuickSelectors = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_playlistData?['name'] as String? ?? l10n.playlistDetails),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: l10n.refreshPlaylist,
+            onPressed: () => _loadPlaylist(forceRefresh: true),
+          ),
+        ],
+      ),
+      body: RepaintBoundary(child: _buildBody(theme)),
+    );
+  }
+
+  Widget _buildBody(ThemeData theme) {
+    final detailLayout = context.layoutType(ResponsivePageType.detail);
+    final horizontalPadding = detailLayout.horizontalPadding;
+
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_errorMessage != null) {
+      return _buildErrorState();
+    }
+
+    return RefreshIndicator(
+      onRefresh: () => _loadPlaylist(forceRefresh: true),
+      child: ResponsivePageContainer(
+        pageType: ResponsivePageType.detail,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(horizontalPadding),
+                child: _buildHeader(theme),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                transitionBuilder: (child, animation) => SizeTransition(
+                  sizeFactor: animation,
+                  axisAlignment: -1.0,
+                  child: child,
+                ),
+                child: !_showQuickSelectors ||
+                        (_pendingTrackRatings.isEmpty &&
+                            !_isSavingPendingRatings)
+                    ? const SizedBox.shrink()
+                    : Padding(
+                        key: const ValueKey('pending-save-bar'),
+                        padding: EdgeInsets.fromLTRB(
+                          horizontalPadding,
+                          0,
+                          horizontalPadding,
+                          12,
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: FilledButton.icon(
+                            onPressed: _pendingTrackRatings.isEmpty ||
+                                    _isSavingPendingRatings
+                                ? null
+                                : _savePendingRatings,
+                            icon: _isSavingPendingRatings
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.save_rounded),
+                            label: Text(
+                              _isSavingPendingRatings
+                                  ? AppLocalizations.of(context)!.savingChanges
+                                  : AppLocalizations.of(context)!
+                                      .saveAllChanges,
+                            ),
+                          ),
+                        ),
+                      ),
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final track = _tracks[index];
+                    final trackId = track['id'] as String?;
+                    final currentRating =
+                        trackId != null ? _trackRatings[trackId] : null;
+                    final pendingRating =
+                        trackId != null ? _pendingTrackRatings[trackId] : null;
+                    final ratingTimestamp = trackId != null
+                        ? _trackRatingTimestamps[trackId]
+                        : null;
+                    final isUpdating =
+                        trackId != null && _updatingTracks.contains(trackId);
+                    return Column(
+                      children: [
+                        _PlaylistTrackTile(
+                          index: index,
+                          track: track,
+                          rating: currentRating,
+                          pendingRating: pendingRating,
+                          ratingTimestamp: ratingTimestamp,
+                          showQuickSelectors: _showQuickSelectors,
+                          isUpdating: isUpdating,
+                          onTap: () => _handlePlayTrack(track, index),
+                          onRate: (newRating) {
+                            if (trackId != null) {
+                              _handleRatingDraftChange(trackId, newRating);
+                            }
+                          },
+                        ),
+                        if (index != _tracks.length - 1)
+                          const SizedBox(height: 8),
+                      ],
+                    );
+                  },
+                  childCount: _tracks.length,
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 32),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
+    final coverUrl = _extractCoverUrl();
+    final playlistName = _playlistData?['name'] as String? ?? '';
+    final ownerName = _extractOwnerName();
+    final description = _extractDescription();
+    final trackCount = _tracks.length;
+
+    // 使用动态提取的颜色
+    final playlistColors = _playlistColorScheme ?? theme.colorScheme;
+    final detailLayout = context.layoutType(ResponsivePageType.detail);
+    final isWide = detailLayout.preferTwoPane;
+    final coverSize = context.responsive<double>(
+      mobile: 220,
+      tablet: 176,
+      desktop: 192,
+    );
+
+    final cover = ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: coverUrl != null
+          ? CachedNetworkImage(
+              imageUrl: coverUrl,
+              width: coverSize,
+              height: coverSize,
+              memCacheWidth: (coverSize * 2).round(),
+              fit: BoxFit.cover,
+            )
+          : Container(
+              width: coverSize,
+              height: coverSize,
+              color: theme.colorScheme.surfaceContainerHighest,
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.queue_music,
+                size: 64,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+    );
+
+    final metadata = Column(
+      crossAxisAlignment:
+          isWide ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      children: [
+        Text(
+          playlistName,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+          textAlign: isWide ? TextAlign.start : TextAlign.center,
+        ),
+        const SizedBox(height: 12),
+        if (ownerName != null)
+          Text(
+            l10n.createdBy(ownerName),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            textAlign: isWide ? TextAlign.start : TextAlign.center,
+          ),
+        const SizedBox(height: 12),
+        Text(
+          _buildMetaLine(trackCount),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+          textAlign: isWide ? TextAlign.start : TextAlign.center,
+        ),
+        const SizedBox(height: 20),
+        Wrap(
+          alignment: isWide ? WrapAlignment.start : WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            FilledButton.icon(
+              onPressed: _handlePlayPlaylist,
+              icon: const Icon(Icons.play_arrow_rounded),
+              label: Text(l10n.playPlaylist),
+            ),
+            Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: theme.colorScheme.surfaceContainerHighest,
+              ),
+              child: IconButton(
+                onPressed: _tracks.isEmpty
+                    ? null
+                    : () {
+                        HapticFeedback.lightImpact();
+                        setState(() {
+                          if (_showQuickSelectors) {
+                            _showQuickSelectors = false;
+                            _pendingTrackRatings.clear();
+                          } else {
+                            _showQuickSelectors = true;
+                          }
+                        });
+                      },
+                icon: Icon(
+                  _showQuickSelectors ? Icons.close : Icons.edit,
+                  color: _tracks.isEmpty
+                      ? theme.colorScheme.onSurface.withValues(alpha: 0.38)
+                      : theme.colorScheme.onSurfaceVariant,
+                ),
+                tooltip: _showQuickSelectors
+                    ? l10n.hideQuickRating
+                    : l10n.showQuickRating,
+                padding: EdgeInsets.zero,
+                iconSize: 20,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (isWide)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              cover,
+              const SizedBox(width: 24),
+              Expanded(child: metadata),
+            ],
+          )
+        else
+          Column(
+            children: [
+              Center(child: cover),
+              const SizedBox(height: 20),
+              metadata,
+            ],
+          ),
+        if (description != null && description.isNotEmpty)
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+            margin: const EdgeInsets.only(top: 16.0),
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: playlistColors.primaryContainer.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: playlistColors.primary.withValues(alpha: 0.2),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.notes_rounded,
+                  size: 24,
+                  color: playlistColors.primary,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    description,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: playlistColors.onSurface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildErrorState() {
+    final l10n = AppLocalizations.of(context)!;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.music_off, size: 64),
+            const SizedBox(height: 16),
+            Text(
+              l10n.failedToLoadPlaylist,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _errorMessage ?? l10n.unknownError,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () => _loadPlaylist(forceRefresh: true),
+              child: Text(l10n.retry),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _buildMetaLine(int trackCount) {
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.playlistTrackCount(trackCount);
+  }
+
+  String? _extractOwnerName() {
+    final owner = _playlistData?['owner'];
+    if (owner is Map<String, dynamic>) {
+      final displayName = owner['display_name'] as String?;
+      if (displayName != null && displayName.isNotEmpty) {
+        return displayName;
+      }
+    }
+    return null;
+  }
+
+  String? _extractDescription() {
+    final description = _playlistData?['description'] as String?;
+    if (description == null || description.isEmpty) {
+      return null;
+    }
+    final cleaned = description.replaceAll(RegExp(r'<[^>]*>'), '').trim();
+    return cleaned.isEmpty ? null : cleaned;
+  }
+
+  String _formatArtists(dynamic artists) {
+    if (artists is List) {
+      final names = <String>[];
+      for (final artist in artists) {
+        if (artist is Map<String, dynamic>) {
+          final name = artist['name'] as String?;
+          if (name != null) {
+            names.add(name);
+          }
+        }
+      }
+      if (names.isNotEmpty) {
+        return names.join(', ');
+      }
+    }
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.unknownArtist;
+  }
+
+  String? _extractCoverUrl() {
+    final images = _playlistData?['images'] as List? ?? const [];
+    if (images.isEmpty) return null;
+    final first = images.first;
+    if (first is Map<String, dynamic>) {
+      return first['url'] as String?;
+    }
+    return null;
+  }
+}
+
+class _PlaylistTrackTile extends StatelessWidget {
+  final int index;
+  final Map<String, dynamic> track;
+  final int? rating;
+  final int? pendingRating;
+  final int? ratingTimestamp;
+  final bool showQuickSelectors;
+  final bool isUpdating;
+  final VoidCallback onTap;
+  final void Function(int rating) onRate;
+
+  const _PlaylistTrackTile({
+    required this.index,
+    required this.track,
+    required this.rating,
+    required this.pendingRating,
+    required this.ratingTimestamp,
+    required this.showQuickSelectors,
+    required this.isUpdating,
+    required this.onTap,
+    required this.onRate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final trackName = track['name'] as String? ?? l10n.unknownTrackName;
+    final artistNames = _formatArtists(track['artists'], context);
+    final borderRadius = BorderRadius.circular(24);
+
+    return Material(
+      color: Colors.transparent,
+      borderRadius: borderRadius,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: borderRadius,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: theme.colorScheme.primaryContainer,
+                    child: Text(
+                      '${index + 1}',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onPrimaryContainer,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          trackName,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          artistNames,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        _buildMeta(theme),
+                        const SizedBox(height: 12),
+                        _buildRatingRow(theme, context),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                transitionBuilder: (child, animation) => SizeTransition(
+                  sizeFactor: animation,
+                  axisAlignment: -1.0,
+                  child: child,
+                ),
+                child: !showQuickSelectors
+                    ? const SizedBox.shrink()
+                    : Column(
+                        key: const ValueKey('quickSelectors'),
+                        children: [
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 56.0),
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 200),
+                              child: isUpdating
+                                  ? const SizedBox(
+                                      key: ValueKey('loading'),
+                                      height: 0,
+                                    )
+                                  : Row(
+                                      key: ValueKey<int?>(
+                                          pendingRating ?? rating),
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Ratings(
+                                          initialRating:
+                                              pendingRating ?? rating,
+                                          onRatingChanged: onRate,
+                                        ),
+                                        if (pendingRating != null &&
+                                            pendingRating != rating) ...[
+                                          const SizedBox(width: 8),
+                                          Icon(
+                                            Icons.circle,
+                                            size: 8,
+                                            color: theme.colorScheme.primary,
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMeta(ThemeData theme) {
+    final albumName = track['album']?['name'] as String?;
+    final durationMs = track['duration_ms'] as int?;
+
+    String extra = '';
+    if (albumName != null && albumName.isNotEmpty) {
+      extra = albumName;
+    }
+
+    if (durationMs != null) {
+      final minutes = durationMs ~/ 60000;
+      final seconds = (durationMs % 60000) ~/ 1000;
+      final formatted =
+          '${minutes.toString().padLeft(1, '0')}:${seconds.toString().padLeft(2, '0')}';
+      extra = extra.isEmpty ? formatted : '$extra · $formatted';
+    }
+
+    if (extra.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Text(
+      extra,
+      style: theme.textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.onSurfaceVariant,
+      ),
+    );
+  }
+
+  Widget _buildRatingRow(ThemeData theme, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    IconData ratingIcon;
+    switch (rating) {
+      case 0:
+        ratingIcon = Icons.thumb_down_outlined;
+        break;
+      case 5:
+        ratingIcon = Icons.whatshot_outlined;
+        break;
+      case 3:
+        ratingIcon = Icons.sentiment_neutral_rounded;
+        break;
+      default:
+        ratingIcon = Icons.star_border_outlined;
+        break;
+    }
+
+    String timeText = l10n.unratedStatus;
+    if (ratingTimestamp != null) {
+      final dateTime =
+          DateTime.fromMillisecondsSinceEpoch(ratingTimestamp!, isUtc: false);
+      final now = DateTime.now();
+      final difference = now.difference(dateTime);
+
+      if (difference.inDays > 0) {
+        timeText = l10n.daysAgoShort(difference.inDays);
+      } else if (difference.inHours > 0) {
+        timeText = l10n.hoursAgoShort(difference.inHours);
+      } else if (difference.inMinutes > 0) {
+        timeText = l10n.minutesAgoShort(difference.inMinutes);
+      } else {
+        timeText = l10n.justNow;
+      }
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          ratingIcon,
+          size: 20,
+          color: rating != null
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurfaceVariant,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          timeText,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+
+  static String _formatArtists(dynamic artists, BuildContext context) {
+    if (artists is List) {
+      final names = <String>[];
+      for (final artist in artists) {
+        if (artist is Map<String, dynamic>) {
+          final name = artist['name'] as String?;
+          if (name != null) {
+            names.add(name);
+          }
+        }
+      }
+      if (names.isNotEmpty) {
+        return names.join(', ');
+      }
+    }
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.unknownArtist;
+  }
+}

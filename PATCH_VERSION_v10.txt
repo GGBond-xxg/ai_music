@@ -1,0 +1,9 @@
+spotoolfy_flutter_ui_sources_patch_v10_pubget_fixed
+
+本版本修复：
+1. pubspec.yaml: share_plus 固定为 10.1.4，file_picker 固定为 8.3.7，避免 win32 版本冲突。
+2. android/app/build.gradle: ndkVersion = 28.2.13676358。
+3. android/build.gradle 与 android/app/build.gradle: 锁定 androidx.core 1.13.1、androidx.browser 1.8.0，避免 AGP 8.8.0 与 AndroidX 新版 AAR 元数据冲突。
+4. android/gradle.properties: 关闭 Kotlin 增量编译相关配置。
+
+请不要覆盖旧目录，建议先删除旧的 spotoolfy_flutter-main 后再解压本包。

@@ -1,0 +1,4 @@
+v32 - Restore manual lyrics source selector.
+- Lyrics source button now opens a bottom sheet with embedded/server lyrics plus NetEase, QQ Music and LRCLIB search candidates.
+- Selecting a source applies lyrics immediately and caches that choice for the current track.
+- Translation/Gemini features remain removed.

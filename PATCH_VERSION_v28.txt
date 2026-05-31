@@ -1,0 +1,1 @@
+v28: Fixed lyrics auto-scroll causing PageView jumps; removed separate expanded lyrics top-right button so only the player-side expand button remains.

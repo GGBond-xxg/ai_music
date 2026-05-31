@@ -1,0 +1,1 @@
+v33: Reset lyrics scroll to top when switching to the next track or changing lyrics source.
