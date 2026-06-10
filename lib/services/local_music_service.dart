@@ -33,34 +33,47 @@ class LocalMusicService {
   ];
   static const _allowedSet = {...allowed};
 
+  /// 首次打开 App 时只做轻量扫描，避免递归扫完整个手机存储导致卡很久。
+  ///
+  /// 策略：
+  /// - 只扫描几个常见音乐目录；
+  /// - 每个目录最多向下扫描 2 层；
+  /// - 总扫描时间超过 8 秒就提前结束；
+  /// - 没找到就直接返回空列表，用户后续可以手动选择文件/文件夹导入。
+  static const int _quickScanMaxDepth = 2;
+  static const Duration _quickScanTimeout = Duration(seconds: 8);
+
   Future<List<MusicTrack>> scanDeviceAudio() async {
     final permitted = await _ensureAudioPermission();
     if (!permitted) return [];
 
     if (!Platform.isAndroid) return [];
 
-    final roots = <String>{
+    const roots = <String>[
       '/storage/emulated/0/Music',
       '/storage/emulated/0/Download',
       '/storage/emulated/0/Downloads',
-      '/storage/emulated/0/Pictures',
-      '/storage/emulated/0/DCIM',
-      '/storage/emulated/0/Movies',
-      '/storage/emulated/0/Ringtones',
-      '/storage/emulated/0/Notifications',
-      '/storage/emulated/0/Alarms',
-      '/storage/emulated/0/Recordings',
       '/storage/emulated/0/MIUI/music',
-      '/sdcard/Music',
-      '/sdcard/Download',
-      '/sdcard/Pictures',
-    };
+      '/storage/emulated/0/Recordings',
+    ];
 
     final paths = <String>[];
+    final stopwatch = Stopwatch()..start();
+
     for (final root in roots) {
-      paths.addAll(await _scanFolderPaths(root));
+      if (stopwatch.elapsed >= _quickScanTimeout) break;
+
+      paths.addAll(
+        await _scanFolderPaths(
+          root,
+          maxDepth: _quickScanMaxDepth,
+          timeout: _quickScanTimeout - stopwatch.elapsed,
+        ),
+      );
     }
-    return _tracksFromPaths(await _uniqueAudioPaths(paths));
+
+    final uniquePaths = await _uniqueAudioPaths(paths);
+    return _tracksFromPaths(uniquePaths);
   }
 
   Future<List<MusicTrack>> pickAudioFiles() async {
@@ -126,24 +139,61 @@ class LocalMusicService {
     return _tracksFromPaths(fallbackPaths);
   }
 
-  Future<List<String>> _scanFolderPaths(String folderPath) async {
+  Future<List<String>> _scanFolderPaths(
+    String folderPath, {
+    int? maxDepth,
+    int? maxAudioFiles,
+    Duration? timeout,
+  }) async {
     final candidates = _folderCandidates(folderPath);
     final paths = <String>[];
+    final stopwatch = timeout == null ? null : (Stopwatch()..start());
 
+    bool shouldStop() {
+      if (maxAudioFiles != null && paths.length >= maxAudioFiles) return true;
+      if (timeout != null && stopwatch != null && stopwatch.elapsed >= timeout) {
+        return true;
+      }
+      return false;
+    }
+
+    final scannedCandidateKeys = <String>{};
     for (final candidate in candidates) {
-      final directory = Directory(candidate);
-      if (!await directory.exists()) continue;
+      if (shouldStop()) break;
 
-      try {
-        await for (final entity in directory.list(
-          recursive: true,
-          followLinks: false,
-        )) {
-          if (entity is! File) continue;
-          if (_isSupportedAudioPath(entity.path)) paths.add(entity.path);
+      final rootDirectory = Directory(candidate);
+      if (!await rootDirectory.exists()) continue;
+
+      final candidateKey = _normalizeStorageAlias(candidate).toLowerCase();
+      if (!scannedCandidateKeys.add(candidateKey)) continue;
+
+      final queue = <MapEntry<String, int>>[MapEntry(candidate, 0)];
+      var cursor = 0;
+
+      while (cursor < queue.length && !shouldStop()) {
+        final entry = queue[cursor++];
+        final directory = Directory(entry.key);
+
+        try {
+          await for (final entity in directory.list(
+            recursive: false,
+            followLinks: false,
+          )) {
+            if (shouldStop()) break;
+
+            if (entity is File) {
+              if (_isSupportedAudioPath(entity.path)) paths.add(entity.path);
+              continue;
+            }
+
+            if (entity is Directory &&
+                (maxDepth == null || entry.value < maxDepth)) {
+              queue.add(MapEntry(entity.path, entry.value + 1));
+            }
+          }
+        } catch (_) {
+          // 继续尝试其它候选路径。部分 Android 目录会因为 scoped storage 拒绝列举。
         }
-      } catch (_) {
-        // 继续尝试其它候选路径。部分 Android 目录会因为 scoped storage 拒绝列举。
       }
     }
 
@@ -332,11 +382,10 @@ class LocalMusicService {
       if (storageStatus.isGranted || storageStatus.isLimited) return true;
     } catch (_) {}
 
-    try {
-      final manageStatus = await Permission.manageExternalStorage.request();
-      if (manageStatus.isGranted || manageStatus.isLimited) return true;
-    } catch (_) {}
-
+    // 不再请求 MANAGE_EXTERNAL_STORAGE。
+    // 该权限属于 Android 11+ “所有文件访问权限”，对音乐播放器来说过重，
+    // 容易触发 Google Play 审核 / Play Protect 风险提示。
+    // 本地音乐读取优先使用 READ_MEDIA_AUDIO / READ_EXTERNAL_STORAGE + FilePicker。
     return false;
   }
 

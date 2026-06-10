@@ -112,8 +112,8 @@ class _LibrarySectionState extends State<LibrarySection> {
                           for (final sourceType
                               in libraryProvider.availableSourceTypes)
                             FilterChip(
-                              selected:
-                                  libraryProvider.isSourceFilterEnabled(sourceType),
+                              selected: libraryProvider
+                                  .isSourceFilterEnabled(sourceType),
                               label: Text(t.sourceName(sourceType)),
                               onSelected: (bool selected) {
                                 HapticFeedback.lightImpact();
@@ -131,7 +131,7 @@ class _LibrarySectionState extends State<LibrarySection> {
                 ),
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 14)),
+            // const SliverToBoxAdapter(child: SizedBox(height: 14)),
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
               sliver: _buildContentSliver(

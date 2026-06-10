@@ -46,7 +46,6 @@ class _LibraryState extends State<Library> {
     _loadLayoutMode();
   }
 
-
   Future<void> _loadLayoutMode() async {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString(_layoutModeKey);
@@ -115,7 +114,6 @@ class _LibraryState extends State<Library> {
     super.dispose();
   }
 
-
   String _localizedViewAsList(BuildContext context) {
     final languageCode = Localizations.localeOf(context).languageCode;
     if (languageCode == 'zh') return '列表';
@@ -175,11 +173,8 @@ class _LibraryState extends State<Library> {
                           stops: const [0.0, 0.7, 1.0],
                         ),
                       ),
-                      padding: EdgeInsets.fromLTRB(
+                      padding: EdgeInsets.all(
                         contentPadding,
-                        16,
-                        contentPadding,
-                        24,
                       ),
                       child: TextField(
                         controller: _searchController,

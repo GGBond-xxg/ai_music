@@ -301,6 +301,9 @@ class SpotifyProvider extends ChangeNotifier {
     if (_initialDeviceScanInProgress || _libraryTracks.isNotEmpty) return;
 
     final prefs = await SharedPreferences.getInstance();
+    final alreadyRequested =
+        prefs.getBool(_initialDeviceScanRequestedKey) ?? false;
+    if (alreadyRequested) return;
 
     _initialDeviceScanInProgress = true;
     notifyListeners();

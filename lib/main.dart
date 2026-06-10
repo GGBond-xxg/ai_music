@@ -656,18 +656,26 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 );
               },
             ),
-            IconButton.filledTonal(
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                ResponsiveNavigation.showAdaptiveModalPage(
-                  context: context,
-                  showCloseButton: false,
-                  child: const SettingsPage(),
-                );
-              },
-              icon: const Icon(Icons.settings_outlined),
-            ),
-            const SizedBox(width: 8),
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0, right: 16.0),
+              child: IconButton.filledTonal(
+                style: IconButton.styleFrom(
+                  minimumSize: const Size(40, 40),
+                  maximumSize: const Size(40, 40),
+                  padding: EdgeInsets.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  ResponsiveNavigation.showAdaptiveModalPage(
+                    context: context,
+                    showCloseButton: false,
+                    child: const SettingsPage(),
+                  );
+                },
+                icon: const Icon(Icons.settings_outlined),
+              ),
+            )
           ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(4.0),
