@@ -52,6 +52,9 @@ class SpotifyProvider extends ChangeNotifier {
   final Logger logger = Logger();
   final Random _random = Random();
 
+  /// 由主页面注入，用于通知栏“词”按钮把 App 切回播放/歌词页。
+  VoidCallback? openLyricsRequested;
+
   static const MethodChannel _widgetChannel = MethodChannel('com.chatlee.aimusic/widget');
 
   late final mk.Player _player;
@@ -72,6 +75,7 @@ class SpotifyProvider extends ChangeNotifier {
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
   bool _isPlaying = false;
+  bool _notificationDismissedByUser = false;
   String? _loadedPlayerTrackKey; // 当前 media_kit 底层已真正 open 的歌曲，用于避免启动后先 seek 再 play 出现无声。
   bool? _isCurrentTrackSaved = true;
   bool _autoPlayOnOpen = false;
@@ -158,16 +162,42 @@ class SpotifyProvider extends ChangeNotifier {
         case 'togglePlayPause':
           await togglePlayPause();
           return null;
+        case 'play':
+          await play();
+          return null;
+        case 'pause':
+          await pause();
+          return null;
         case 'skipToPrevious':
           await skipToPrevious();
           return null;
         case 'skipToNext':
           await skipToNext();
           return null;
+        case 'seekToPosition':
+          await seekToPosition(_intFromNative(call.arguments));
+          return null;
+        case 'stopPlayback':
+          await stopPlaybackFromNotification();
+          return null;
+        case 'stopPlaybackAndCloseApp':
+          await stopPlaybackFromNotification(closeApp: true);
+          return null;
+        case 'openLyrics':
+          _notificationDismissedByUser = false;
+          openLyricsRequested?.call();
+          return null;
         default:
           return null;
       }
     });
+  }
+
+  int _intFromNative(Object? value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
   }
 
   void _bindPlayerStreams() {
@@ -183,6 +213,7 @@ class SpotifyProvider extends ChangeNotifier {
 
     _playingSub = _player.stream.playing.listen((value) {
       _isPlaying = value;
+      if (value) _notificationDismissedByUser = false;
       _rebuildPlaybackMaps(notify: true);
     });
 
@@ -406,6 +437,8 @@ class SpotifyProvider extends ChangeNotifier {
     _upcomingTracks = [];
     _autoPlayOnOpen = false;
     await _player.stop();
+    await PlaybackNotificationService.cancel();
+    _notificationDismissedByUser = false;
     _loadedPlayerTrackKey = null;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_autoPlayOnOpenKey, false);
@@ -431,6 +464,8 @@ class SpotifyProvider extends ChangeNotifier {
       _upcomingTracks = [];
       _autoPlayOnOpen = false;
       await _player.stop();
+      await PlaybackNotificationService.cancel();
+      _notificationDismissedByUser = false;
       _loadedPlayerTrackKey = null;
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_autoPlayOnOpenKey, false);
@@ -441,6 +476,8 @@ class SpotifyProvider extends ChangeNotifier {
       _activeContextType = 'source';
       if (removingCurrent) {
         await _player.stop();
+        await PlaybackNotificationService.cancel();
+        _notificationDismissedByUser = false;
         _loadedPlayerTrackKey = null;
         _position = Duration.zero;
         _duration = Duration.zero;
@@ -488,6 +525,7 @@ class SpotifyProvider extends ChangeNotifier {
   }) async {
     if (index < 0 || index >= _queue.length) return;
 
+    _notificationDismissedByUser = false;
     _currentIndex = index;
     _position = Duration.zero;
     _duration = _queue[index].duration ?? Duration.zero;
@@ -648,12 +686,27 @@ class SpotifyProvider extends ChangeNotifier {
   }
 
   Future<void> _updateSystemPlaybackNotification(MusicTrack track) async {
+    if (_notificationDismissedByUser && !_isPlaying) {
+      await PlaybackNotificationService.cancel();
+      return;
+    }
+
+    final notificationDuration = _duration > Duration.zero
+        ? _duration
+        : (track.duration ?? Duration.zero);
+    final durationMs = notificationDuration.inMilliseconds;
+    final positionMs = durationMs > 0
+        ? _position.inMilliseconds.clamp(0, durationMs).toInt()
+        : _position.inMilliseconds.clamp(0, 1 << 31).toInt();
+
     await PlaybackNotificationService.update(
       title: track.title,
       artist: track.artist?.trim().isNotEmpty == true ? track.artist!.trim() : 'Unknown Artist',
       source: _sourceLabel(track),
       isPlaying: _isPlaying,
       coverUrl: _networkCover(track),
+      positionMs: positionMs,
+      durationMs: durationMs,
     );
   }
 
@@ -818,10 +871,48 @@ class SpotifyProvider extends ChangeNotifier {
     } else {
       final ready = await _ensureCurrentTrackLoaded(autoStart: false);
       if (!ready) return;
+      _notificationDismissedByUser = false;
       await _player.play();
       _isPlaying = true;
     }
     _rebuildPlaybackMaps(notify: true);
+  }
+
+  Future<void> play() async {
+    if (!_isPlaying) {
+      await togglePlayPause();
+    }
+  }
+
+  Future<void> pause() async {
+    if (_isPlaying) {
+      await togglePlayPause();
+    }
+  }
+
+  Future<void> stopPlaybackFromNotification({bool closeApp = false}) async {
+    _notificationDismissedByUser = true;
+    if (_isPlaying) {
+      try {
+        await _player.pause();
+      } catch (_) {}
+    }
+    _isPlaying = false;
+    await PlaybackNotificationService.cancel();
+    _rebuildPlaybackMaps(notify: false);
+    notifyListeners();
+
+    if (closeApp) {
+      await _closeAppFromNotification();
+    }
+  }
+
+  Future<void> _closeAppFromNotification() async {
+    try {
+      await _widgetChannel.invokeMethod<void>('closeApp');
+    } catch (_) {
+      await SystemNavigator.pop();
+    }
   }
 
   Future<void> seekToPosition(int positionMs) async {

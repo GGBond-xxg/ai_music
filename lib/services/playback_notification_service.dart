@@ -18,10 +18,26 @@ class PlaybackNotificationService {
     required String source,
     required bool isPlaying,
     String? coverUrl,
+    int positionMs = 0,
+    int durationMs = 0,
   }) async {
     if (kIsWeb) return;
 
-    final signature = '$title|$artist|$source|$isPlaying|${coverUrl ?? ''}';
+    final safeDurationMs = durationMs < 0 ? 0 : durationMs;
+    final safePositionMs = _normalisePosition(positionMs, safeDurationMs);
+
+    // 进度按秒去重：系统 MediaSession 会根据 position + speed 自己向前走，
+    // 这里不需要每一帧都刷新通知，否则 Android 端会频繁 decode 封面。
+    final coarsePositionSecond = safePositionMs ~/ 1000;
+    final signature = [
+      title,
+      artist,
+      source,
+      isPlaying,
+      coverUrl ?? '',
+      safeDurationMs,
+      coarsePositionSecond,
+    ].join('|');
     if (_lastSignature == signature) return;
     _lastSignature = signature;
 
@@ -39,6 +55,8 @@ class PlaybackNotificationService {
         'source': source,
         'isPlaying': isPlaying,
         'coverUrl': nativeCover,
+        'positionMs': safePositionMs,
+        'durationMs': safeDurationMs,
       });
     } catch (_) {
       // Notification support should never block playback.
@@ -51,6 +69,12 @@ class PlaybackNotificationService {
     try {
       await _channel.invokeMethod<void>('cancel');
     } catch (_) {}
+  }
+
+  static int _normalisePosition(int positionMs, int durationMs) {
+    final positivePosition = positionMs < 0 ? 0 : positionMs;
+    if (durationMs <= 0) return positivePosition;
+    return positivePosition > durationMs ? durationMs : positivePosition;
   }
 
   static Future<String?> _coverForNativeNotification(String? coverUrl) async {

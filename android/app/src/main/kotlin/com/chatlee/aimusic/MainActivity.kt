@@ -3,6 +3,8 @@ package com.chatlee.aimusic
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
@@ -13,6 +15,13 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
     private var methodChannel: MethodChannel? = null
+    private val pendingPlaybackActions = mutableListOf<PendingPlaybackAction>()
+    private val mainHandler = Handler(Looper.getMainLooper())
+
+    private data class PendingPlaybackAction(
+        val action: String,
+        val positionMs: Long? = null
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,30 +35,73 @@ class MainActivity: FlutterActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        setIntent(intent)
         handleIntent(intent)
     }
 
-    private fun handleIntent(intent: Intent?) {
-        when (intent?.action) {
-            "PLAY_PAUSE" -> {
-                methodChannel?.invokeMethod("togglePlayPause", null)
-            }
-            "PREVIOUS" -> {
-                methodChannel?.invokeMethod("skipToPrevious", null)
-            }
-            "NEXT" -> {
-                methodChannel?.invokeMethod("skipToNext", null)
+    private fun closeAppFromNotification() {
+        // 通知栏右侧 X 的语义：停止播放并关闭当前 App 任务，而不只是暂停。
+        mainHandler.post {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                finishAndRemoveTask()
+            } else {
+                finish()
             }
         }
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        val action = intent?.action ?: return
+        val positionMs = if (intent.hasExtra("positionMs")) {
+            intent.getLongExtra("positionMs", 0L)
+        } else {
+            null
+        }
+        dispatchPlaybackAction(action, positionMs)
+    }
+
+    private fun dispatchPlaybackAction(action: String, positionMs: Long? = null) {
+        val channel = methodChannel
+        if (channel == null) {
+            pendingPlaybackActions.add(PendingPlaybackAction(action, positionMs))
+            return
+        }
+
+        when (action) {
+            "PLAY_PAUSE" -> channel.invokeMethod("togglePlayPause", null)
+            "PLAY" -> channel.invokeMethod("play", null)
+            "PAUSE" -> channel.invokeMethod("pause", null)
+            "PREVIOUS" -> channel.invokeMethod("skipToPrevious", null)
+            "NEXT" -> channel.invokeMethod("skipToNext", null)
+            "SEEK_TO" -> channel.invokeMethod("seekToPosition", (positionMs ?: 0L).toInt())
+            "STOP" -> channel.invokeMethod("stopPlaybackAndCloseApp", null)
+            "OPEN_LYRICS" -> channel.invokeMethod("openLyrics", null)
+        }
+    }
+
+    private fun flushPendingPlaybackActions() {
+        if (pendingPlaybackActions.isEmpty()) return
+        val actions = pendingPlaybackActions.toList()
+        pendingPlaybackActions.clear()
+
+        // 给 Dart 侧 MethodChannel 留一点初始化时间，避免冷启动时通知栏按钮丢指令。
+        mainHandler.postDelayed({
+            actions.forEach { dispatchPlaybackAction(it.action, it.positionMs) }
+        }, 300L)
     }
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         
-        // Widget 控制通道
+        // Widget 控制通道，同时也承接系统媒体通知栏按钮回调。
         methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.chatlee.aimusic/widget")
+        MusicNotificationHelper.attachControlChannel(methodChannel)
         methodChannel?.setMethodCallHandler { call, result ->
             when (call.method) {
+                "closeApp" -> {
+                    closeAppFromNotification()
+                    result.success(null)
+                }
                 "updateWidget" -> {
                     val songName = call.argument<String>("songName")
                     val artistName = call.argument<String>("artistName")
@@ -79,6 +131,7 @@ class MainActivity: FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+        flushPendingPlaybackActions()
         
 
         // 播放通知通道
@@ -92,7 +145,9 @@ class MainActivity: FlutterActivity() {
                         artist = call.argument<String>("artist"),
                         source = call.argument<String>("source"),
                         isPlaying = call.argument<Boolean>("isPlaying") ?: false,
-                        coverUrl = call.argument<String>("coverUrl")
+                        coverUrl = call.argument<String>("coverUrl"),
+                        positionMs = call.argument<Number>("positionMs")?.toLong(),
+                        durationMs = call.argument<Number>("durationMs")?.toLong()
                     )
                     result.success(null)
                 }
@@ -151,5 +206,10 @@ class MainActivity: FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+    }
+
+    override fun cleanUpFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+        MusicNotificationHelper.attachControlChannel(null)
+        super.cleanUpFlutterEngine(flutterEngine)
     }
 }

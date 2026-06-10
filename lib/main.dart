@@ -30,6 +30,7 @@ import 'services/settings_service.dart';
 import 'services/ui_texts.dart';
 import 'utils/responsive.dart';
 import 'widgets/spotify_selectors.dart';
+import 'widgets/lyrics.dart' show lyricsCenterLineRequest;
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -368,6 +369,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       if (!mounted) return;
       final spotifyProvider = context.read<SpotifyProvider>();
       _themeSpotifyProvider = spotifyProvider;
+      spotifyProvider.openLyricsRequested = _openLyricsFromNotification;
       spotifyProvider.addListener(_scheduleThemeFromCurrentTrack);
       unawaited(context.read<ThemeProvider>().loadThemeMode(context).then((_) {
         _scheduleThemeFromCurrentTrack(force: true);
@@ -379,6 +381,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     _themeSpotifyProvider?.removeListener(_scheduleThemeFromCurrentTrack);
+    _themeSpotifyProvider?.openLyricsRequested = null;
     _themeSpotifyProvider = null;
     WidgetsBinding.instance.removeObserver(this);
     _pageController.dispose();
@@ -411,6 +414,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
 
     return null;
+  }
+
+  void _openLyricsFromNotification() {
+    if (!mounted) return;
+    _switchToPage(0);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      lyricsCenterLineRequest.value++;
+    });
   }
 
   ImageProvider? _imageProviderForThemeCover(String coverUrl) {
